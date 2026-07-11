@@ -19,6 +19,9 @@ export function ProjectDetails() {
   // Stage 2 inputs
   const [liveLinkInput, setLiveLinkInput] = useState("");
   
+  // Stage 5 inputs
+  const [companyNameInput, setCompanyNameInput] = useState("");
+  
   // Stage 6 inputs
   const [finalDomainInput, setFinalDomainInput] = useState("");
 
@@ -146,6 +149,12 @@ export function ProjectDetails() {
 
   const advanceToStage5 = async () => {
     const { data } = await supabase.from("projects").update({ current_stage: 5 }).eq("id", project.id).select().single();
+    if (data) setProject(data);
+  };
+
+  const submitPaymentCompanyName = async () => {
+    if (!companyNameInput) return alert("Please provide the company name");
+    const { data } = await supabase.from("projects").update({ payment_company_name: companyNameInput }).eq("id", project.id).select().single();
     if (data) setProject(data);
   };
 
@@ -468,11 +477,46 @@ export function ProjectDetails() {
           <Card className="mb-8 border-bluetick-500/50">
             <CardHeader><CardTitle className="text-bluetick-500">Stage 5: Payment</CardTitle></CardHeader>
             <CardContent>
-              <p className="text-gray-400 mb-4">Final payment is being collected from the client.</p>
-              {user?.role === 'Administrator' && project.current_stage === 5 && (
-                <Button variant="premium" className="bg-green-600 hover:bg-green-500 text-white" onClick={advanceToStage6}>
-                  Mark Final Payment Received
-                </Button>
+              {project.current_stage === 5 ? (
+                <>
+                  <p className="text-gray-400 mb-4">Final payment is being collected from the client.</p>
+                  
+                  {user?.role === 'Growth Partner' && !project.payment_company_name && (
+                    <div className="p-6 border border-border rounded-lg bg-surface-hover/20 mt-4">
+                      <h3 className="text-lg font-bold text-white mb-2">Note Payment Details</h3>
+                      <p className="text-sm text-gray-400 mb-4">Please input the Company Name or Client Name that the final payment is collected under.</p>
+                      <div className="flex gap-4">
+                        <Input 
+                          placeholder="e.g. Mrs Powertech" 
+                          className="max-w-md"
+                          value={companyNameInput}
+                          onChange={e => setCompanyNameInput(e.target.value)}
+                        />
+                        <Button variant="premium" onClick={submitPaymentCompanyName}>Save Details</Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {project.payment_company_name && (
+                    <div className="mb-4 p-4 bg-surface-hover/30 border border-border rounded-lg">
+                      <p className="text-sm text-gray-400">Payment collected under company:</p>
+                      <p className="font-bold text-bluetick-500">{project.payment_company_name}</p>
+                    </div>
+                  )}
+
+                  {user?.role === 'Administrator' && (
+                    <Button variant="premium" className="bg-green-600 hover:bg-green-500 text-white mt-4" onClick={advanceToStage6}>
+                      Mark Final Payment Received
+                    </Button>
+                  )}
+                </>
+              ) : (
+                <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
+                  <p className="text-green-500 font-bold">Payment successfully received and verified.</p>
+                  {project.payment_company_name && (
+                    <p className="text-sm text-gray-400 mt-1">Paid under: <span className="text-white">{project.payment_company_name}</span></p>
+                  )}
+                </div>
               )}
             </CardContent>
           </Card>

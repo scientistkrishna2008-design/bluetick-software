@@ -34,11 +34,20 @@ export function AdminDashboard() {
   };
 
   const fetchProjects = async () => {
-    const { data, error } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*, engineer:engineer_id(name), growth_partner:growth_partner_id(name)')
+      .order('created_at', { ascending: false });
     if (error) {
       console.error("Error fetching projects:", error);
     }
     if (data) setProjects(data);
+  };
+
+  const markPaid = async (projectId: string, role: 'engineer' | 'growth_partner') => {
+    const updatePayload = role === 'engineer' ? { engineer_paid: true } : { growth_partner_paid: true };
+    const { error } = await supabase.from('projects').update(updatePayload).eq('id', projectId);
+    if (!error) fetchProjects();
   };
 
   const approveUser = async (id: string) => {
@@ -120,6 +129,70 @@ export function AdminDashboard() {
                     {projects.length === 0 && (
                       <tr>
                         <td colSpan={6} className="px-6 py-8 text-center text-gray-400">No active projects. Start one above!</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Payroll Management Section */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">Payroll & Payouts</h2>
+            <p className="text-sm text-gray-400">Manage team payouts for projects reaching Stage 5 (Payment)</p>
+          </div>
+          <Card>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="text-xs text-gray-400 uppercase bg-surface-hover/50 border-b border-border">
+                    <tr>
+                      <th className="px-6 py-4">Project ID & Client</th>
+                      <th className="px-6 py-4">Stage</th>
+                      <th className="px-6 py-4">Growth Partner Payout</th>
+                      <th className="px-6 py-4">Engineer Payout</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {projects.filter(p => p.current_stage >= 5).map(p => (
+                      <tr key={p.id} className="border-b border-border hover:bg-surface-hover/30">
+                        <td className="px-6 py-4">
+                          <p className="font-mono text-bluetick-400">{p.ticket_number}</p>
+                          <p className="font-medium text-xs text-gray-400">{p.business_name}</p>
+                        </td>
+                        <td className="px-6 py-4">Stage {p.current_stage}</td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <span className="text-gray-300 w-32 truncate">{p.growth_partner?.name || "N/A"}</span>
+                            {p.growth_partner_paid ? (
+                              <span className="px-2 py-1 bg-green-500/20 text-green-500 rounded text-xs font-bold">Paid</span>
+                            ) : (
+                              <Button size="sm" variant="premium" className="bg-yellow-600 hover:bg-yellow-500 text-white" onClick={() => markPaid(p.id, 'growth_partner')}>
+                                Mark Paid
+                              </Button>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <span className="text-gray-300 w-32 truncate">{p.engineer?.name || "N/A"}</span>
+                            {p.engineer_paid ? (
+                              <span className="px-2 py-1 bg-green-500/20 text-green-500 rounded text-xs font-bold">Paid</span>
+                            ) : (
+                              <Button size="sm" variant="premium" className="bg-yellow-600 hover:bg-yellow-500 text-white" onClick={() => markPaid(p.id, 'engineer')}>
+                                Mark Paid
+                              </Button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {projects.filter(p => p.current_stage >= 5).length === 0 && (
+                      <tr>
+                        <td colSpan={4} className="px-6 py-8 text-center text-gray-400">No projects have reached Stage 5 for payouts yet.</td>
                       </tr>
                     )}
                   </tbody>

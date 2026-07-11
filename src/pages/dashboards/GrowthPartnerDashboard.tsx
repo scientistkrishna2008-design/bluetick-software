@@ -76,6 +76,23 @@ export function GrowthPartnerDashboard() {
           </span>
         </div>
         
+        {/* Payroll Notification Bar */}
+        <div className="pt-3 border-t border-border mt-3 text-center">
+          {project.growth_partner_paid ? (
+            <span className="text-xs font-bold text-green-500 bg-green-500/10 px-3 py-1.5 rounded-full border border-green-500/30">
+              Payment done successfully 🎉
+            </span>
+          ) : project.current_stage >= 5 ? (
+            <span className="text-xs font-bold text-blue-500 bg-blue-500/10 px-3 py-1.5 rounded-full border border-blue-500/30">
+              Payment is being processed
+            </span>
+          ) : (
+            <span className="text-xs font-bold text-yellow-500 bg-yellow-500/10 px-3 py-1.5 rounded-full border border-yellow-500/30">
+              Payout pending Stage 5
+            </span>
+          )}
+        </div>
+        
         {project.final_domain && (
           <div className="pt-3 border-t border-border mt-3 text-center">
             <span className="text-xs text-green-500 font-bold">{project.final_domain}</span>

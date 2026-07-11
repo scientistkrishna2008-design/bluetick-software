@@ -104,6 +104,12 @@ export function EngineerDashboard() {
                     <CardContent className="pt-4">
                       <p className="text-sm font-medium mb-1">{project.business_name}</p>
                       <p className="text-xs text-gray-400">Click to view project details and submit live link.</p>
+                      
+                      <div className="pt-3 border-t border-border mt-3 text-center">
+                        <span className="text-xs font-bold text-yellow-500 bg-yellow-500/10 px-3 py-1.5 rounded-full border border-yellow-500/30">
+                          Payout pending Stage 5
+                        </span>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
@@ -134,6 +140,18 @@ export function EngineerDashboard() {
                       <CardContent className="pt-4">
                         <p className="text-sm font-medium mb-1">{project.business_name}</p>
                         <p className="text-xs text-gray-400">Click to connect the final custom domain.</p>
+
+                        <div className="pt-3 border-t border-border mt-3 text-center">
+                          {project.engineer_paid ? (
+                            <span className="text-xs font-bold text-green-500 bg-green-500/10 px-3 py-1.5 rounded-full border border-green-500/30">
+                              Payment done successfully 🎉
+                            </span>
+                          ) : (
+                            <span className="text-xs font-bold text-blue-500 bg-blue-500/10 px-3 py-1.5 rounded-full border border-blue-500/30">
+                              Payment is being processed
+                            </span>
+                          )}
+                        </div>
                       </CardContent>
                     </Card>
                   ))}
@@ -202,7 +220,19 @@ export function EngineerDashboard() {
                       </CardHeader>
                       <CardContent className="pt-4">
                         <p className="text-sm font-medium mb-1 text-gray-400">{project.business_name}</p>
-                        <p className="text-xs text-green-500 font-bold">{project.final_domain}</p>
+                        <p className="text-xs text-green-500 font-bold mb-3">{project.final_domain}</p>
+
+                        <div className="pt-3 border-t border-border mt-3 text-center">
+                          {project.engineer_paid ? (
+                            <span className="text-xs font-bold text-green-500 bg-green-500/10 px-3 py-1.5 rounded-full border border-green-500/30">
+                              Payment done successfully 🎉
+                            </span>
+                          ) : (
+                            <span className="text-xs font-bold text-blue-500 bg-blue-500/10 px-3 py-1.5 rounded-full border border-blue-500/30">
+                              Payment is being processed
+                            </span>
+                          )}
+                        </div>
                       </CardContent>
                     </Card>
                   ))}

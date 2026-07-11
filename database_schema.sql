@@ -24,6 +24,11 @@ create table public.projects (
   notes text,
   stage_1_status text default 'Pending Discussion', -- Pending Discussion, Discussion Completed, Admin Approved
   
+  -- Payroll Tracking
+  growth_partner_paid boolean default false,
+  engineer_paid boolean default false,
+  payment_company_name text,
+
   -- Metadata
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
