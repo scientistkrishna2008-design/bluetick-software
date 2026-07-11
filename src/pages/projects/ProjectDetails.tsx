@@ -113,11 +113,19 @@ export function ProjectDetails() {
     if (!description) return;
     
     const correctionNumber = corrections.length + 1;
+    const status = user?.role === 'Growth Partner' ? 'Awaiting Admin Approval' : 'Pending';
+    
     await supabase.from("project_corrections").insert({
       project_id: project.id,
       correction_number: correctionNumber,
-      description
+      description,
+      status
     });
+    fetchCorrections();
+  };
+
+  const approveTicketToEngineer = async (correctionId: string) => {
+    await supabase.from("project_corrections").update({ status: 'Pending' }).eq("id", correctionId);
     fetchCorrections();
   };
 
@@ -152,8 +160,13 @@ export function ProjectDetails() {
     if (data) setProject(data);
   };
 
-  const markProjectCompleted = async () => {
+  const gpMarkClientHappy = async () => {
     const { data } = await supabase.from("projects").update({ current_stage: 8 }).eq("id", project.id).select().single();
+    if (data) setProject(data);
+  };
+
+  const markProjectCompleted = async () => {
+    const { data } = await supabase.from("projects").update({ current_stage: 9 }).eq("id", project.id).select().single();
     if (data) {
       setProject(data);
       alert("Project Officially Completed!");
@@ -161,7 +174,7 @@ export function ProjectDetails() {
   };
 
   const requestMaintenance = async () => {
-    const { data } = await supabase.from("projects").update({ current_stage: 9 }).eq("id", project.id).select().single();
+    const { data } = await supabase.from("projects").update({ current_stage: 10 }).eq("id", project.id).select().single();
     if (data) setProject(data);
   };
 
@@ -385,6 +398,7 @@ export function ProjectDetails() {
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                       ticket.status === 'Approved' ? 'bg-green-500/20 text-green-500' :
                       ticket.status === 'Ready For Review' ? 'bg-blue-500/20 text-blue-500' :
+                      ticket.status === 'Awaiting Admin Approval' ? 'bg-purple-500/20 text-purple-500' :
                       'bg-yellow-500/20 text-yellow-500'
                     }`}>
                       {ticket.status}
@@ -395,6 +409,16 @@ export function ProjectDetails() {
                       <p className="text-xs text-gray-400 uppercase tracking-wider mb-2 font-bold">Requested Fix</p>
                       <p className="text-sm">{ticket.description}</p>
                     </div>
+
+                    {/* Admin Action for Awaiting Admin Approval */}
+                    {user?.role === 'Administrator' && ticket.status === 'Awaiting Admin Approval' && (
+                      <div className="pt-4 border-t border-border mt-4">
+                        <Button onClick={() => approveTicketToEngineer(ticket.id)} className="w-full sm:w-auto bg-purple-600 hover:bg-purple-500 text-white" size="sm">
+                          Allow Ticket & Send to Engineer
+                        </Button>
+                        <p className="text-xs text-gray-400 mt-2">The engineer cannot see this ticket until you allow it.</p>
+                      </div>
+                    )}
 
                     {/* Engineer Action */}
                     {user?.role === 'Web Engineer' && ticket.status === 'Pending' && (
@@ -497,17 +521,37 @@ export function ProjectDetails() {
               {user?.role === 'Growth Partner' && project.current_stage === 7 && (
                 <div className="p-6 border border-border rounded-lg bg-surface-hover/20 mt-4">
                   <h3 className="text-lg font-bold text-white mb-2">Final Handoff</h3>
-                  <p className="text-sm text-gray-400 mb-4">Please contact the client and provide them with their new website URL. Once done, close out the project.</p>
-                  <Button variant="premium" className="bg-bluetick-500 w-full md:w-auto" onClick={markProjectCompleted}>
-                    Mark Project Completed
+                  <p className="text-sm text-gray-400 mb-4">Please contact the client and provide them with their new website URL. Once the client is satisfied with the launch, click below.</p>
+                  <Button variant="premium" className="bg-bluetick-500 w-full md:w-auto" onClick={gpMarkClientHappy}>
+                    Client is Happy - Request Project Closure
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Stage 8: Admin Project Closure */}
+        {project.current_stage >= 8 && (
+          <Card className="mb-8 border-bluetick-500/50">
+            <CardHeader><CardTitle className="text-bluetick-500">Stage 8: Official Closure</CardTitle></CardHeader>
+            <CardContent>
+              <p className="text-gray-400 mb-4">The Growth Partner has confirmed the client is happy and the handoff is complete. Waiting for Admin to officially end the project.</p>
+              
+              {user?.role === 'Administrator' && project.current_stage === 8 && (
+                <div className="p-6 border border-border rounded-lg bg-surface-hover/20 mt-4">
+                  <h3 className="text-lg font-bold text-white mb-2">End Project</h3>
+                  <p className="text-sm text-gray-400 mb-4">Review all final deliverables. Once clicked, this project will be permanently marked as completed.</p>
+                  <Button variant="premium" className="bg-red-600 hover:bg-red-500 w-full md:w-auto text-white" onClick={markProjectCompleted}>
+                    End Project Officially
                   </Button>
                 </div>
               )}
 
-              {project.current_stage === 8 && (
+              {project.current_stage >= 9 && (
                 <div className="mt-4 p-6 bg-gradient-to-r from-bluetick-500/20 to-green-500/20 border border-bluetick-500/50 rounded-xl text-center">
                   <h2 className="text-2xl font-bold text-white mb-2">🎉 Project Completed! 🎉</h2>
-                  <p className="text-gray-300 mb-6">This project has been successfully delivered to the client.</p>
+                  <p className="text-gray-300 mb-6">This project has been successfully delivered and closed by the Admin.</p>
                   
                   {user?.role === 'Growth Partner' && (
                     <div className="pt-6 border-t border-white/10">
@@ -524,8 +568,8 @@ export function ProjectDetails() {
           </Card>
         )}
 
-        {/* Stage 9: Maintenance Requested */}
-        {project.current_stage === 9 && (
+        {/* Stage 10: Maintenance Requested */}
+        {project.current_stage === 10 && (
           <Card className="mb-8 border-yellow-500/50">
             <CardHeader><CardTitle className="text-yellow-500">Stage 9: Maintenance Requested</CardTitle></CardHeader>
             <CardContent>

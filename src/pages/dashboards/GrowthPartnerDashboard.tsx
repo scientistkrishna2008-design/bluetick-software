@@ -38,8 +38,8 @@ export function GrowthPartnerDashboard() {
     p.ticket_number.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const activeProjects = filteredProjects.filter(p => p.current_stage < 8);
-  const completedProjects = filteredProjects.filter(p => p.current_stage >= 8);
+  const activeProjects = filteredProjects.filter(p => p.current_stage < 9);
+  const completedProjects = filteredProjects.filter(p => p.current_stage >= 9);
 
   const ProjectCard = ({ project }: { project: any }) => (
     <Card 

@@ -9,6 +9,8 @@ export function EngineerDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [stage2Projects, setStage2Projects] = useState<any[]>([]);
+  const [stage6Projects, setStage6Projects] = useState<any[]>([]);
+  const [completedProjects, setCompletedProjects] = useState<any[]>([]);
   const [tickets, setTickets] = useState<any[]>([]);
 
   useEffect(() => {
@@ -29,6 +31,24 @@ export function EngineerDashboard() {
       .order("created_at", { ascending: false });
     if (s2Data) setStage2Projects(s2Data);
 
+    // Fetch Stage 6 projects (Domain linking)
+    const { data: s6Data } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("engineer_id", user.uid)
+      .eq("current_stage", 6)
+      .order("created_at", { ascending: false });
+    if (s6Data) setStage6Projects(s6Data);
+
+    // Fetch Completed projects
+    const { data: cData } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("engineer_id", user.uid)
+      .gte("current_stage", 9)
+      .order("created_at", { ascending: false });
+    if (cData) setCompletedProjects(cData);
+
     // Fetch Correction Tickets
     const { data: tData } = await supabase
       .from("project_corrections")
@@ -37,7 +57,7 @@ export function EngineerDashboard() {
       
     if (tData) {
       const myTickets = tData.filter((t: any) => 
-        t.project.engineer_id === user.uid && t.status !== "Approved"
+        t.project.engineer_id === user.uid && t.status !== "Approved" && t.status !== "Awaiting Admin Approval"
       );
       setTickets(myTickets);
     }
@@ -66,7 +86,7 @@ export function EngineerDashboard() {
                 No initial builds required.
               </p>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-4 mb-8">
                 {stage2Projects.map(project => (
                   <Card 
                     key={project.id} 
@@ -89,6 +109,37 @@ export function EngineerDashboard() {
                 ))}
               </div>
             )}
+
+            {/* Stage 6: Domain Linking */}
+            {stage6Projects.length > 0 && (
+              <>
+                <h2 className="text-xl font-bold mb-6 mt-8 text-green-500 border-b border-border pb-2">
+                  Action Required (Stage 6)
+                </h2>
+                <div className="space-y-4 mb-8">
+                  {stage6Projects.map(project => (
+                    <Card 
+                      key={project.id} 
+                      className="border-green-500 hover:border-green-400 cursor-pointer transition-colors"
+                      onClick={() => navigate(`/project/${project.id}`)}
+                    >
+                      <CardHeader className="bg-green-500/5">
+                        <CardTitle className="flex justify-between items-center text-lg">
+                          {project.ticket_number}
+                          <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-500">
+                            Domain Setup
+                          </span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="pt-4">
+                        <p className="text-sm font-medium mb-1">{project.business_name}</p>
+                        <p className="text-xs text-gray-400">Click to connect the final custom domain.</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Active Corrections */}
@@ -101,7 +152,7 @@ export function EngineerDashboard() {
                 No active tickets. You're all caught up!
               </p>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-4 mb-8">
                 {tickets.map(ticket => (
                   <Card 
                     key={ticket.id} 
@@ -126,6 +177,37 @@ export function EngineerDashboard() {
                   </Card>
                 ))}
               </div>
+            )}
+
+            {/* Completed Projects */}
+            {completedProjects.length > 0 && (
+              <>
+                <h2 className="text-xl font-bold mb-6 mt-8 text-gray-400 border-b border-border pb-2">
+                  Completed & Handed Off
+                </h2>
+                <div className="space-y-4">
+                  {completedProjects.map(project => (
+                    <Card 
+                      key={project.id} 
+                      className="opacity-75 hover:opacity-100 cursor-pointer transition-opacity"
+                      onClick={() => navigate(`/project/${project.id}`)}
+                    >
+                      <CardHeader className="bg-surface-hover/30">
+                        <CardTitle className="flex justify-between items-center text-lg text-gray-400">
+                          {project.ticket_number}
+                          <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-500">
+                            Client Happy 🎉
+                          </span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="pt-4">
+                        <p className="text-sm font-medium mb-1 text-gray-400">{project.business_name}</p>
+                        <p className="text-xs text-green-500 font-bold">{project.final_domain}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </>
             )}
           </div>
 
