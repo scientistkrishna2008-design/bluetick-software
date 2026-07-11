@@ -48,9 +48,9 @@ export function CreateProjectModal({ onClose, onSuccess }: { onClose: () => void
     const clientName = formData.get("clientName") as string;
     const requirements = formData.get("requirements") as string;
     
-    // Auto-generate ticket number BT-26-XXXX
+    // Auto-generate Project ID PROJ-26-XXXX
     const randomNum = Math.floor(1000 + Math.random() * 9000);
-    const ticket_number = `BT-26-${randomNum}`;
+    const ticket_number = `PROJ-26-${randomNum}`;
     
     // Get current user to assign growth_partner_id
     const { data: userData } = await supabase.auth.getUser();

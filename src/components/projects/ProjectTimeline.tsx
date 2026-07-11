@@ -12,7 +12,8 @@ const STAGES = [
   "Payment",
   "Domain & Hosting",
   "Website Live",
-  "Project Completed"
+  "Completed",
+  "Maintenance"
 ];
 
 export function ProjectTimeline({ currentStage }: TimelineProps) {

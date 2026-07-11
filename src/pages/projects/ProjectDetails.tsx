@@ -18,6 +18,9 @@ export function ProjectDetails() {
 
   // Stage 2 inputs
   const [liveLinkInput, setLiveLinkInput] = useState("");
+  
+  // Stage 6 inputs
+  const [finalDomainInput, setFinalDomainInput] = useState("");
 
   useEffect(() => {
     fetchProject();
@@ -138,6 +141,35 @@ export function ProjectDetails() {
     if (data) setProject(data);
   };
 
+  const advanceToStage6 = async () => {
+    const { data } = await supabase.from("projects").update({ current_stage: 6 }).eq("id", project.id).select().single();
+    if (data) setProject(data);
+  };
+
+  const submitFinalDomain = async () => {
+    if (!finalDomainInput) return alert("Please provide the custom domain URL");
+    const { data } = await supabase.from("projects").update({ final_domain: finalDomainInput, current_stage: 7 }).eq("id", project.id).select().single();
+    if (data) setProject(data);
+  };
+
+  const markProjectCompleted = async () => {
+    const { data } = await supabase.from("projects").update({ current_stage: 8 }).eq("id", project.id).select().single();
+    if (data) {
+      setProject(data);
+      alert("Project Officially Completed!");
+    }
+  };
+
+  const requestMaintenance = async () => {
+    const { data } = await supabase.from("projects").update({ current_stage: 9 }).eq("id", project.id).select().single();
+    if (data) setProject(data);
+  };
+
+  const startMaintenanceWork = async () => {
+    const { data } = await supabase.from("projects").update({ current_stage: 3 }).eq("id", project.id).select().single();
+    if (data) setProject(data);
+  };
+
   if (loading) return <div className="min-h-screen pt-24 text-center">Loading...</div>;
   if (!project) return <div className="min-h-screen pt-24 text-center">Project not found</div>;
 
@@ -152,7 +184,7 @@ export function ProjectDetails() {
               ← Back
             </Button>
             <h1 className="text-3xl font-bold">{project.business_name}</h1>
-            <p className="text-gray-400">Ticket: <span className="text-bluetick-400 font-mono">{project.ticket_number}</span></p>
+            <p className="text-gray-400">Project ID: <span className="text-bluetick-400 font-mono">{project.ticket_number}</span></p>
           </div>
           
           <div className="text-left md:text-right w-full md:w-auto bg-surface-hover/30 p-4 rounded-xl border border-border">
@@ -181,15 +213,22 @@ export function ProjectDetails() {
             )}
 
             {/* Global Live Link */}
-            {project.live_link ? (
-              <div className="flex items-center md:justify-end gap-2">
-                <span className="text-sm text-gray-400">Live URL:</span>
+            {project.final_domain ? (
+              <div className="flex items-center md:justify-end gap-2 mt-3 pt-3 border-t border-border">
+                <span className="text-sm text-green-500 font-bold">Official Site:</span>
+                <a href={project.final_domain.startsWith('http') ? project.final_domain : `https://${project.final_domain}`} target="_blank" rel="noreferrer" className="text-sm text-white font-bold hover:underline flex items-center gap-1 bg-green-500/20 px-3 py-1.5 rounded border border-green-500/30">
+                  {project.final_domain} ↗
+                </a>
+              </div>
+            ) : project.live_link ? (
+              <div className="flex items-center md:justify-end gap-2 mt-3 pt-3 border-t border-border">
+                <span className="text-sm text-gray-400">Vercel Preview:</span>
                 <a href={project.live_link} target="_blank" rel="noreferrer" className="text-sm text-bluetick-400 hover:underline flex items-center gap-1 bg-bluetick-500/10 px-2 py-1 rounded">
                   View App ↗
                 </a>
               </div>
             ) : (
-              <div className="text-sm text-yellow-500/80">No Live URL Provided Yet</div>
+              <div className="text-sm text-yellow-500/80 mt-3 pt-3 border-t border-border">No Live URL Provided Yet</div>
             )}
           </div>
         </div>
@@ -322,7 +361,7 @@ export function ProjectDetails() {
                   Updates made by the Engineer will automatically reflect on the Live URL.
                 </p>
               </div>
-              {project.current_stage === 3 && user?.role === 'Administrator' && (
+              {project.current_stage === 3 && (user?.role === 'Administrator' || user?.role === 'Growth Partner') && (
                 <div className="flex gap-4">
                   <Button variant="outline" onClick={createCorrectionTicket}>+ Raise Ticket</Button>
                   <Button variant="premium" onClick={advanceToFinalApproval}>Corrections Complete</Button>
@@ -367,8 +406,8 @@ export function ProjectDetails() {
                       </div>
                     )}
 
-                    {/* Admin Action */}
-                    {user?.role === 'Administrator' && ticket.status === 'Ready For Review' && (
+                    {/* Admin / Growth Partner Action */}
+                    {(user?.role === 'Administrator' || user?.role === 'Growth Partner') && ticket.status === 'Ready For Review' && (
                       <div className="flex gap-4 pt-4 border-t border-border mt-4">
                         <Button size="sm" className="bg-green-600 hover:bg-green-500 text-white" onClick={() => approveCorrection(ticket.id)}>
                           Verify & Approve Fix
@@ -391,10 +430,115 @@ export function ProjectDetails() {
             <CardHeader><CardTitle className="text-bluetick-500">Stage 4: Final Approval</CardTitle></CardHeader>
             <CardContent>
               <p className="text-gray-400 mb-4">All corrections complete. Waiting for final admin sign-off.</p>
-              {user?.role === 'Administrator' && project.current_stage === 4 && (
+              {(user?.role === 'Administrator' || user?.role === 'Growth Partner') && project.current_stage === 4 && (
                 <Button variant="premium" onClick={advanceToStage5}>
-                  Give Final Approval (Move to Stage 5)
+                  Give Final Approval (Move to Stage 5: Payment)
                 </Button>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Stage 5: Payment */}
+        {project.current_stage >= 5 && (
+          <Card className="mb-8 border-bluetick-500/50">
+            <CardHeader><CardTitle className="text-bluetick-500">Stage 5: Payment</CardTitle></CardHeader>
+            <CardContent>
+              <p className="text-gray-400 mb-4">Final payment is being collected from the client.</p>
+              {user?.role === 'Administrator' && project.current_stage === 5 && (
+                <Button variant="premium" className="bg-green-600 hover:bg-green-500 text-white" onClick={advanceToStage6}>
+                  Mark Final Payment Received
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Stage 6: Domain & Hosting */}
+        {project.current_stage >= 6 && (
+          <Card className="mb-8 border-bluetick-500/50">
+            <CardHeader><CardTitle className="text-bluetick-500">Stage 6: Domain & Hosting</CardTitle></CardHeader>
+            <CardContent>
+              {user?.role === 'Web Engineer' && project.current_stage === 6 ? (
+                <div className="p-6 border-2 border-dashed border-border rounded-lg bg-surface-hover/20">
+                  <h3 className="text-lg font-bold mb-2">Connect Custom Domain</h3>
+                  <p className="text-sm text-gray-400 mb-4">Purchase and link the final domain name for the client.</p>
+                  <div className="flex gap-4">
+                    <Input 
+                      placeholder="www.clientwebsite.com" 
+                      className="max-w-md"
+                      value={finalDomainInput}
+                      onChange={e => setFinalDomainInput(e.target.value)}
+                    />
+                    <Button variant="premium" onClick={submitFinalDomain}>Domain Linked</Button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-gray-400 mb-4">Waiting for Web Engineer to connect the final custom domain...</p>
+                  {project.final_domain && (
+                    <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-lg text-green-500 font-bold">
+                      Domain successfully linked: {project.final_domain}
+                    </div>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Stage 7: Website Live */}
+        {project.current_stage >= 7 && (
+          <Card className="mb-8 border-bluetick-500/50">
+            <CardHeader><CardTitle className="text-bluetick-500">Stage 7: Website Live & Handoff</CardTitle></CardHeader>
+            <CardContent>
+              <p className="text-gray-400 mb-4">The website is officially live on the custom domain. Growth Partner will now hand off the final site to the client.</p>
+              
+              {user?.role === 'Growth Partner' && project.current_stage === 7 && (
+                <div className="p-6 border border-border rounded-lg bg-surface-hover/20 mt-4">
+                  <h3 className="text-lg font-bold text-white mb-2">Final Handoff</h3>
+                  <p className="text-sm text-gray-400 mb-4">Please contact the client and provide them with their new website URL. Once done, close out the project.</p>
+                  <Button variant="premium" className="bg-bluetick-500 w-full md:w-auto" onClick={markProjectCompleted}>
+                    Mark Project Completed
+                  </Button>
+                </div>
+              )}
+
+              {project.current_stage === 8 && (
+                <div className="mt-4 p-6 bg-gradient-to-r from-bluetick-500/20 to-green-500/20 border border-bluetick-500/50 rounded-xl text-center">
+                  <h2 className="text-2xl font-bold text-white mb-2">🎉 Project Completed! 🎉</h2>
+                  <p className="text-gray-300 mb-6">This project has been successfully delivered to the client.</p>
+                  
+                  {user?.role === 'Growth Partner' && (
+                    <div className="pt-6 border-t border-white/10">
+                      <h3 className="text-lg font-bold mb-2">Client needs updates?</h3>
+                      <p className="text-sm text-gray-400 mb-4">Re-open this project and loop it back through the pipeline to add new features or maintenance.</p>
+                      <Button variant="outline" className="border-bluetick-500 text-bluetick-500 hover:bg-bluetick-500 hover:text-white" onClick={requestMaintenance}>
+                        Request Post-Launch Maintenance
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Stage 9: Maintenance Requested */}
+        {project.current_stage === 9 && (
+          <Card className="mb-8 border-yellow-500/50">
+            <CardHeader><CardTitle className="text-yellow-500">Stage 9: Maintenance Requested</CardTitle></CardHeader>
+            <CardContent>
+              <p className="text-gray-400 mb-4">The client has requested post-launch updates. Admin must negotiate pricing and collect payment.</p>
+              
+              {user?.role === 'Administrator' && (
+                <div className="p-6 border border-border rounded-lg bg-surface-hover/20 mt-4">
+                  <h3 className="text-lg font-bold text-white mb-2">Start Maintenance Pipeline</h3>
+                  <p className="text-sm text-gray-400 mb-4">Click this button once the client has paid the maintenance fee. This will bump the project straight back to <strong>Stage 3 (Corrections)</strong> so the Growth Partner can start raising new tickets for the Engineer.</p>
+                  <Button variant="premium" className="bg-yellow-600 hover:bg-yellow-500 text-white" onClick={startMaintenanceWork}>
+                    Payment Received - Send back to Stage 3
+                  </Button>
+                </div>
               )}
             </CardContent>
           </Card>

@@ -9,6 +9,7 @@ create table public.projects (
   -- Stage Tracking
   current_stage integer default 1,
   live_link text, -- Added for persistent Vercel URL
+  final_domain text, -- Official custom domain added in Stage 6
   
   -- Stage 1 Details (Initial Discussion)
   client_name text not null,

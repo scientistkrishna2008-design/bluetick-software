@@ -94,7 +94,7 @@ export function AdminDashboard() {
                 <table className="w-full text-sm text-left">
                   <thead className="text-xs text-gray-400 uppercase bg-surface-hover/50 border-b border-border">
                     <tr>
-                      <th className="px-6 py-4">Ticket</th>
+                      <th className="px-6 py-4">Project ID</th>
                       <th className="px-6 py-4">Business</th>
                       <th className="px-6 py-4">Stage</th>
                       <th className="px-6 py-4">Status</th>
