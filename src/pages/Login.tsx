@@ -55,7 +55,7 @@ export function Login() {
       } else if (profile?.role === 'Client') {
         navigate('/dashboard/client');
       } else if (profile?.role === 'Growth Partner') {
-        navigate('/dashboard/growth');
+        navigate('/dashboard/partner');
       } else {
         navigate('/');
       }

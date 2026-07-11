@@ -228,6 +228,22 @@ export function ProjectDetails() {
                 <div className="p-4 bg-surface-hover rounded-md text-sm">{project.requirements || "No requirements provided."}</div>
               </div>
 
+              {project.reference_images && project.reference_images.length > 0 && (
+                <div>
+                  <p className="text-sm text-gray-400 mb-2">Design References</p>
+                  <div className="flex flex-wrap gap-4">
+                    {project.reference_images.map((img: string, idx: number) => (
+                      <a key={idx} href={img} target="_blank" rel="noreferrer" className="block group relative rounded-md overflow-hidden border border-border">
+                        <img src={img} alt="Reference" className="w-24 h-24 object-cover group-hover:scale-110 transition-transform" />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                          <span className="text-xs text-white">View</span>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {user?.role === 'Administrator' && project.current_stage === 1 && (
                 <div className="mt-6 pt-6 border-t border-border">
                   <div className="flex gap-4">

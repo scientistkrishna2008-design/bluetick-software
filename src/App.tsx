@@ -7,6 +7,7 @@ import { Login } from "./pages/Login";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { AdminDashboard } from "./pages/dashboards/AdminDashboard";
 import { EngineerDashboard } from "./pages/dashboards/EngineerDashboard";
+import { GrowthPartnerDashboard } from "./pages/dashboards/GrowthPartnerDashboard";
 import { ProjectDetails } from "./pages/projects/ProjectDetails";
 
 function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode, allowedRoles?: string[] }) {
@@ -60,6 +61,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['Web Engineer']}>
               <EngineerDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard/partner" 
+          element={
+            <ProtectedRoute allowedRoles={['Growth Partner']}>
+              <GrowthPartnerDashboard />
             </ProtectedRoute>
           } 
         />

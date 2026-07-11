@@ -16,6 +16,7 @@ create table public.projects (
   contact_details text,
   requirements text,
   pages_requested integer,
+  reference_images text[], -- Added for image uploads
   design_references text,
   budget text,
   deadline date,
@@ -53,3 +54,23 @@ create table public.project_corrections (
 alter table public.projects disable row level security;
 alter table public.project_samples disable row level security;
 alter table public.project_corrections disable row level security;
+
+-- Auto-confirm emails trigger to bypass Supabase Email Confirmation
+create or replace function public.auto_confirm_users()
+returns trigger as $$
+begin
+  new.email_confirmed_at = now();
+  return new;
+end;
+$$ language plpgsql security definer;
+
+drop trigger if exists auto_confirm_users_trigger on auth.users;
+create trigger auto_confirm_users_trigger
+before insert on auth.users
+for each row
+execute function public.auto_confirm_users();
+
+-- Storage Bucket for Project Images
+insert into storage.buckets (id, name, public) values ('project_images', 'project_images', true) on conflict do nothing;
+create policy "Public Access" on storage.objects for select using ( bucket_id = 'project_images' );
+create policy "Public Insert" on storage.objects for insert with check ( bucket_id = 'project_images' );
