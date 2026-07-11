@@ -15,6 +15,7 @@ const joinSchema = z.object({
   phone: z.string().optional(),
   role: z.enum(["Web Engineer", "Growth Partner", "Client"]),
   portfolio: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  gpayNumber: z.string().optional(),
 });
 
 type JoinFormValues = z.infer<typeof joinSchema>;
@@ -27,6 +28,7 @@ export function Join() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<JoinFormValues>({
     resolver: zodResolver(joinSchema),
@@ -34,6 +36,8 @@ export function Join() {
       role: "Client",
     },
   });
+
+  const selectedRole = watch("role");
 
   const onSubmit = async (data: JoinFormValues) => {
     setIsSubmitting(true);
@@ -61,6 +65,7 @@ export function Join() {
             email: data.email,
             name: data.fullName,
             role: data.role,
+            gpay_number: data.role !== 'Client' ? data.gpayNumber : null,
             status: "Pending" // Explicitly pending
           }
         ]);
@@ -157,6 +162,14 @@ export function Join() {
                 <Input {...register("portfolio")} placeholder="https://..." />
                 {errors.portfolio && <p className="text-xs text-red-500">{errors.portfolio.message}</p>}
               </div>
+
+              {(selectedRole === "Web Engineer" || selectedRole === "Growth Partner") && (
+                <div className="space-y-2 border-t border-border mt-4 pt-4">
+                  <label className="text-sm font-medium text-bluetick-400">GPay / UPI Transaction Number (Required for Payouts)</label>
+                  <Input {...register("gpayNumber")} placeholder="Enter your GPay or UPI number" required />
+                  <p className="text-xs text-gray-400">We need this to pay you for your work!</p>
+                </div>
+              )}
 
               <Button type="submit" className="w-full mt-2" variant="premium" disabled={isSubmitting}>
                 {isSubmitting ? "Submitting..." : "Submit Application"}

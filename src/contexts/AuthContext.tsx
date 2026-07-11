@@ -8,6 +8,7 @@ interface AppUser {
   name: string;
   role: "Administrator" | "Web Engineer" | "Growth Partner" | "Client" | null;
   status: "Pending" | "Approved" | "Rejected" | null;
+  gpay_number?: string;
 }
 
 interface AuthContextType {
@@ -63,7 +64,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           email: supabaseUser.email || "",
           name: userProfile.name || "User",
           role: userProfile.role,
-          status: userProfile.status
+          status: userProfile.status,
+          gpay_number: userProfile.gpay_number
         });
       } else {
         // Fallback if profile not created yet
@@ -72,7 +74,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           email: supabaseUser.email || "",
           name: "User",
           role: null,
-          status: "Pending"
+          status: "Pending",
+          gpay_number: undefined
         });
       }
     } catch (error) {

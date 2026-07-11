@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Ca
 import { Button } from "../../components/ui/Button";
 import { useNavigate } from "react-router";
 import { CreateProjectModal } from "../../components/projects/CreateProjectModal";
+import { Input } from "../../components/ui/Input";
 
 export function GrowthPartnerDashboard() {
   const { user, logout } = useAuth();
@@ -12,6 +13,7 @@ export function GrowthPartnerDashboard() {
   const [projects, setProjects] = useState<any[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [gpayInput, setGpayInput] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -31,6 +33,34 @@ export function GrowthPartnerDashboard() {
       
     if (data) setProjects(data);
   };
+
+  const saveGPay = async () => {
+    if (!gpayInput) return;
+    await supabase.from("users").update({ gpay_number: gpayInput }).eq("id", user?.uid);
+    window.location.reload();
+  };
+
+  if (user && !user.gpay_number) {
+    return (
+      <div className="min-h-screen pt-24 pb-12 px-6 flex items-center justify-center">
+        <Card className="w-full max-w-md border-bluetick-500/50">
+          <CardHeader>
+            <CardTitle className="text-xl text-bluetick-500">Action Required: Payout Details</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-400 mb-6 text-sm">You must enter your GPay or UPI transaction number before accessing your dashboard so we can pay you for your work.</p>
+            <Input 
+              placeholder="Enter GPay / UPI Number" 
+              value={gpayInput}
+              onChange={(e) => setGpayInput(e.target.value)}
+              className="mb-4"
+            />
+            <Button variant="premium" className="w-full" onClick={saveGPay}>Save Payment Details</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const filteredProjects = projects.filter(p => 
     p.business_name.toLowerCase().includes(searchQuery.toLowerCase()) || 

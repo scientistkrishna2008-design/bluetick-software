@@ -21,33 +21,33 @@ export function AdminDashboard() {
   const navigate = useNavigate();
   const [pendingUsers, setPendingUsers] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [showCreateProject, setShowCreateProject] = useState(false);
 
   useEffect(() => {
-    fetchPendingUsers();
-    fetchProjects();
+    fetchData();
   }, []);
 
-  const fetchPendingUsers = async () => {
-    const { data } = await supabase.from('users').select('*').eq('status', 'Pending');
-    if (data) setPendingUsers(data);
-  };
+  const fetchData = async () => {
+    // Fetch users for mapping
+    const { data: usersData } = await supabase.from('users').select('*');
+    if (usersData) {
+      setUsers(usersData);
+      setPendingUsers(usersData.filter(u => u.status === 'Pending'));
+    }
 
-  const fetchProjects = async () => {
-    const { data, error } = await supabase
-      .from('projects')
-      .select('*, engineer:engineer_id(name), growth_partner:growth_partner_id(name)')
-      .order('created_at', { ascending: false });
+    // Fetch projects safely without joins
+    const { data: projectsData, error } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
     if (error) {
       console.error("Error fetching projects:", error);
     }
-    if (data) setProjects(data);
+    if (projectsData) setProjects(projectsData);
   };
 
   const markPaid = async (projectId: string, role: 'engineer' | 'growth_partner') => {
     const updatePayload = role === 'engineer' ? { engineer_paid: true } : { growth_partner_paid: true };
     const { error } = await supabase.from('projects').update(updatePayload).eq('id', projectId);
-    if (!error) fetchProjects();
+    if (!error) fetchData();
   };
 
   const approveUser = async (id: string) => {
@@ -120,7 +120,7 @@ export function AdminDashboard() {
                         <td className="px-6 py-4">
                           <span className="px-2 py-1 bg-surface border border-border rounded text-xs">{p.stage_1_status}</span>
                         </td>
-                        <td className="px-6 py-4 text-gray-400">{p.engineer?.name || "Unassigned"}</td>
+                        <td className="px-6 py-4 text-gray-400">{users.find(u => u.id === p.engineer_id)?.name || "Unassigned"}</td>
                         <td className="px-6 py-4 text-right">
                           <Button variant="ghost" size="sm" onClick={() => navigate(`/project/${p.id}`)}>View Master</Button>
                         </td>
@@ -166,7 +166,10 @@ export function AdminDashboard() {
                         <td className="px-6 py-4">Stage {p.current_stage}</td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <span className="text-gray-300 w-32 truncate">{p.growth_partner?.name || "N/A"}</span>
+                            <div>
+                              <span className="text-gray-300 w-32 truncate block">{users.find(u => u.id === p.growth_partner_id)?.name || "N/A"}</span>
+                              <span className="text-xs text-bluetick-500 font-mono">{users.find(u => u.id === p.growth_partner_id)?.gpay_number || "No GPay"}</span>
+                            </div>
                             {p.growth_partner_paid ? (
                               <span className="px-2 py-1 bg-green-500/20 text-green-500 rounded text-xs font-bold">Paid</span>
                             ) : (
@@ -178,7 +181,10 @@ export function AdminDashboard() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <span className="text-gray-300 w-32 truncate">{p.engineer?.name || "N/A"}</span>
+                            <div>
+                              <span className="text-gray-300 w-32 truncate block">{users.find(u => u.id === p.engineer_id)?.name || "N/A"}</span>
+                              <span className="text-xs text-bluetick-500 font-mono">{users.find(u => u.id === p.engineer_id)?.gpay_number || "No GPay"}</span>
+                            </div>
                             {p.engineer_paid ? (
                               <span className="px-2 py-1 bg-green-500/20 text-green-500 rounded text-xs font-bold">Paid</span>
                             ) : (
@@ -249,7 +255,7 @@ export function AdminDashboard() {
       </div>
 
       {showCreateProject && (
-        <CreateProjectModal onClose={() => setShowCreateProject(false)} onSuccess={fetchProjects} />
+        <CreateProjectModal onClose={() => setShowCreateProject(false)} onSuccess={fetchData} />
       )}
     </div>
   );
