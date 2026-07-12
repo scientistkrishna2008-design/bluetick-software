@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        growbro: {
+        growbroo: {
           50: '#f0fdf4',
           100: '#dcfce7',
           200: '#bbf7d0',

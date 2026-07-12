@@ -85,7 +85,7 @@ export function AdminDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stat.value}</div>
-                <p className="text-xs text-growbro-500 mt-1">{stat.change}</p>
+                <p className="text-xs text-growbroo-500 mt-1">{stat.change}</p>
               </CardContent>
             </Card>
           ))}
@@ -114,7 +114,7 @@ export function AdminDashboard() {
                   <tbody>
                     {projects.map(p => (
                       <tr key={p.id} className="border-b border-border hover:bg-surface-hover/30">
-                        <td className="px-6 py-4 font-mono text-growbro-400">{p.ticket_number}</td>
+                        <td className="px-6 py-4 font-mono text-growbroo-400">{p.ticket_number}</td>
                         <td className="px-6 py-4 font-medium">{p.business_name}</td>
                         <td className="px-6 py-4">Stage {p.current_stage}</td>
                         <td className="px-6 py-4">
@@ -160,7 +160,7 @@ export function AdminDashboard() {
                     {projects.filter(p => p.current_stage >= 5).map(p => (
                       <tr key={p.id} className="border-b border-border hover:bg-surface-hover/30">
                         <td className="px-6 py-4">
-                          <p className="font-mono text-growbro-400">{p.ticket_number}</p>
+                          <p className="font-mono text-growbroo-400">{p.ticket_number}</p>
                           <p className="font-medium text-xs text-gray-400">{p.business_name}</p>
                         </td>
                         <td className="px-6 py-4">Stage {p.current_stage}</td>
@@ -168,7 +168,7 @@ export function AdminDashboard() {
                           <div className="flex items-center gap-3">
                             <div>
                               <span className="text-gray-300 w-32 truncate block">{users.find(u => u.id === p.growth_partner_id)?.name || "N/A"}</span>
-                              <span className="text-xs text-growbro-500 font-mono">{users.find(u => u.id === p.growth_partner_id)?.gpay_number || "No GPay"}</span>
+                              <span className="text-xs text-growbroo-500 font-mono">{users.find(u => u.id === p.growth_partner_id)?.gpay_number || "No GPay"}</span>
                             </div>
                             {p.growth_partner_paid ? (
                               <span className="px-2 py-1 bg-green-500/20 text-green-500 rounded text-xs font-bold">Paid</span>
@@ -183,7 +183,7 @@ export function AdminDashboard() {
                           <div className="flex items-center gap-3">
                             <div>
                               <span className="text-gray-300 w-32 truncate block">{users.find(u => u.id === p.engineer_id)?.name || "N/A"}</span>
-                              <span className="text-xs text-growbro-500 font-mono">{users.find(u => u.id === p.engineer_id)?.gpay_number || "No GPay"}</span>
+                              <span className="text-xs text-growbroo-500 font-mono">{users.find(u => u.id === p.engineer_id)?.gpay_number || "No GPay"}</span>
                             </div>
                             {p.engineer_paid ? (
                               <span className="px-2 py-1 bg-green-500/20 text-green-500 rounded text-xs font-bold">Paid</span>

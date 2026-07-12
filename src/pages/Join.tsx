@@ -86,7 +86,7 @@ export function Join() {
       <div className="min-h-screen flex items-center justify-center p-6 bg-background">
         <Card className="w-full max-w-md text-center">
           <CardHeader>
-            <div className="w-16 h-16 bg-growbro-500/20 text-growbro-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-growbroo-500/20 text-growbroo-500 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
             </div>
             <CardTitle>Application Received</CardTitle>
@@ -108,7 +108,7 @@ export function Join() {
         className="w-full max-w-md z-10"
       >
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">Join GrowBro<span className="text-growbro-500">.</span></h1>
+          <h1 className="text-3xl font-bold mb-2">Join Growbroo<span className="text-growbroo-500">.</span></h1>
           <p className="text-gray-400">Fill out the form below to continue.</p>
         </div>
 
@@ -148,7 +148,7 @@ export function Join() {
                   <label className="text-sm font-medium text-gray-300">Role</label>
                   <select 
                     {...register("role")}
-                    className="flex h-10 w-full rounded-md border border-border bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-growbro-500"
+                    className="flex h-10 w-full rounded-md border border-border bg-surface px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-growbroo-500"
                   >
                     <option value="Client">Client</option>
                     <option value="Web Engineer">Web Engineer</option>
@@ -165,7 +165,7 @@ export function Join() {
 
               {(selectedRole === "Web Engineer" || selectedRole === "Growth Partner") && (
                 <div className="space-y-2 border-t border-border mt-4 pt-4">
-                  <label className="text-sm font-medium text-growbro-400">GPay / UPI Transaction Number (Required for Payouts)</label>
+                  <label className="text-sm font-medium text-growbroo-400">GPay / UPI Transaction Number (Required for Payouts)</label>
                   <Input {...register("gpayNumber")} placeholder="Enter your GPay or UPI number" required />
                   <p className="text-xs text-gray-400">We need this to pay you for your work!</p>
                 </div>

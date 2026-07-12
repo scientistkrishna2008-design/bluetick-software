@@ -74,9 +74,9 @@ export function EngineerDashboard() {
   if (user && !user.gpay_number) {
     return (
       <div className="min-h-screen pt-24 pb-12 px-6 flex items-center justify-center">
-        <Card className="w-full max-w-md border-growbro-500/50">
+        <Card className="w-full max-w-md border-growbroo-500/50">
           <CardHeader>
-            <CardTitle className="text-xl text-growbro-500">Action Required: Payout Details</CardTitle>
+            <CardTitle className="text-xl text-growbroo-500">Action Required: Payout Details</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-gray-400 mb-6 text-sm">You must enter your GPay or UPI transaction number before accessing your dashboard so we can pay you for your work.</p>
@@ -108,7 +108,7 @@ export function EngineerDashboard() {
           
           {/* Action Required */}
           <div>
-            <h2 className="text-xl font-bold mb-6 text-growbro-400 border-b border-border pb-2">
+            <h2 className="text-xl font-bold mb-6 text-growbroo-400 border-b border-border pb-2">
               Action Required (Stage 2)
             </h2>
             {stage2Projects.length === 0 ? (
@@ -120,10 +120,10 @@ export function EngineerDashboard() {
                 {stage2Projects.map(project => (
                   <Card 
                     key={project.id} 
-                    className="border-growbro-500 hover:border-growbro-400 cursor-pointer transition-colors"
+                    className="border-growbroo-500 hover:border-growbroo-400 cursor-pointer transition-colors"
                     onClick={() => navigate(`/project/${project.id}`)}
                   >
-                    <CardHeader className="bg-growbro-500/5">
+                    <CardHeader className="bg-growbroo-500/5">
                       <CardTitle className="flex justify-between items-center text-lg">
                         {project.ticket_number}
                         <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-500">

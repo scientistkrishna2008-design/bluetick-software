@@ -115,7 +115,7 @@ export function Splash() {
                     animate={{ pathLength: 1, opacity: 1 }}
                     transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    GrowBro
+                    Growbroo
                   </motion.text>
                 </svg>
               </motion.div>

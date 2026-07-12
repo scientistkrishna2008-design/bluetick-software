@@ -100,7 +100,7 @@ export function CreateProjectModal({ onClose, onSuccess }: { onClose: () => void
               name="requirements" 
               required 
               rows={4}
-              className="flex w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-growbro-500 mt-1"
+              className="flex w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-growbroo-500 mt-1"
               placeholder="Detailed requirements..."
             />
           </div>
@@ -113,11 +113,11 @@ export function CreateProjectModal({ onClose, onSuccess }: { onClose: () => void
                 multiple 
                 accept="image/*"
                 onChange={handleFileChange}
-                className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-growbro-500/20 file:text-growbro-500 hover:file:bg-growbro-500/30 cursor-pointer"
+                className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-growbroo-500/20 file:text-growbroo-500 hover:file:bg-growbroo-500/30 cursor-pointer"
               />
             </div>
             {selectedFiles.length > 0 && (
-              <p className="text-xs text-growbro-400 mt-2">{selectedFiles.length} file(s) selected.</p>
+              <p className="text-xs text-growbroo-400 mt-2">{selectedFiles.length} file(s) selected.</p>
             )}
           </div>
           
