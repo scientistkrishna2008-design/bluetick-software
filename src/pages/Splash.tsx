@@ -133,7 +133,7 @@ export function Splash() {
               >
                 <h1 className="text-5xl font-bold tracking-tighter flex items-center" style={{ fontFamily: "Inter, sans-serif" }}>
                   <span className="text-[#22C55E] drop-shadow-[0_0_15px_rgba(34,197,94,0.4)]">G</span>
-                  <span className="text-white">rowBro</span>
+                  <span className="text-white">rowbroo</span>
                 </h1>
               </motion.div>
             )}
