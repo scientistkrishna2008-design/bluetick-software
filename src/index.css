@@ -11,7 +11,7 @@
 
 @layer base {
   body {
-    @apply bg-background text-foreground antialiased font-sans selection:bg-bluetick-500 selection:text-white;
+    @apply bg-background text-foreground antialiased font-sans selection:bg-growbro-500 selection:text-white;
   }
 }
 
@@ -21,10 +21,10 @@
   }
   
   .glass-card {
-    @apply bg-surface/30 backdrop-blur-sm border border-border/30 rounded-2xl shadow-lg transition-all duration-300 hover:bg-surface/40 hover:border-bluetick-500/30;
+    @apply bg-surface/30 backdrop-blur-sm border border-border/30 rounded-2xl shadow-lg transition-all duration-300 hover:bg-surface/40 hover:border-growbro-500/30;
   }
   
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-bluetick-400 to-bluetick-600;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-growbro-400 to-growbro-600;
   }
 }

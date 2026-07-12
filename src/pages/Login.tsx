@@ -106,7 +106,7 @@ export function Login() {
             </form>
             
             <div className="mt-6 text-center text-sm text-gray-400">
-              Don't have an account? <button onClick={() => navigate('/join')} className="text-bluetick-500 hover:underline">Apply here</button>
+              Don't have an account? <button onClick={() => navigate('/join')} className="text-growbro-500 hover:underline">Apply here</button>
             </div>
           </CardContent>
         </Card>

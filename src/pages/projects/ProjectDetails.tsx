@@ -206,7 +206,7 @@ export function ProjectDetails() {
               ← Back
             </Button>
             <h1 className="text-3xl font-bold">{project.business_name}</h1>
-            <p className="text-gray-400">Project ID: <span className="text-bluetick-400 font-mono">{project.ticket_number}</span></p>
+            <p className="text-gray-400">Project ID: <span className="text-growbro-400 font-mono">{project.ticket_number}</span></p>
           </div>
           
           <div className="text-left md:text-right w-full md:w-auto bg-surface-hover/30 p-4 rounded-xl border border-border">
@@ -219,7 +219,7 @@ export function ProjectDetails() {
                   <span className="text-sm text-yellow-500 font-medium">Advance pending...</span>
                 ) : (
                   <select 
-                    className="bg-surface border border-border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-bluetick-500 text-bluetick-400"
+                    className="bg-surface border border-border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-growbro-500 text-growbro-400"
                     value={project.engineer_id || ""}
                     onChange={(e) => assignEngineer(e.target.value)}
                   >
@@ -245,7 +245,7 @@ export function ProjectDetails() {
             ) : project.live_link ? (
               <div className="flex items-center md:justify-end gap-2 mt-3 pt-3 border-t border-border">
                 <span className="text-sm text-gray-400">Vercel Preview:</span>
-                <a href={project.live_link} target="_blank" rel="noreferrer" className="text-sm text-bluetick-400 hover:underline flex items-center gap-1 bg-bluetick-500/10 px-2 py-1 rounded">
+                <a href={project.live_link} target="_blank" rel="noreferrer" className="text-sm text-growbro-400 hover:underline flex items-center gap-1 bg-growbro-500/10 px-2 py-1 rounded">
                   View App ↗
                 </a>
               </div>
@@ -264,9 +264,9 @@ export function ProjectDetails() {
 
         {/* Stage 1: Initial Discussion (Project Brief) */}
         {project.current_stage >= 1 && (
-          <Card className="mb-8 border-bluetick-500/50">
+          <Card className="mb-8 border-growbro-500/50">
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-bluetick-500">Project Brief (Stage 1)</CardTitle>
+              <CardTitle className="text-growbro-500">Project Brief (Stage 1)</CardTitle>
               <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                 project.current_stage > 1 ? 'bg-green-500/20 text-green-500' :
                 project.stage_1_status === 'Admin Approved' ? 'bg-green-500/20 text-green-500' :
@@ -326,9 +326,9 @@ export function ProjectDetails() {
 
         {/* Stage 2: Sample Version */}
         {project.current_stage === 2 && (
-          <Card className="mb-8 border-bluetick-500/50">
+          <Card className="mb-8 border-growbro-500/50">
             <CardHeader className="flex flex-row justify-between items-center">
-              <CardTitle className="text-bluetick-500">Stage 2: Sample Version</CardTitle>
+              <CardTitle className="text-growbro-500">Stage 2: Sample Version</CardTitle>
             </CardHeader>
             <CardContent>
               {user?.role === 'Web Engineer' && !project.live_link && (
@@ -459,8 +459,8 @@ export function ProjectDetails() {
 
         {/* Stage 4: Final Approval */}
         {project.current_stage >= 4 && (
-          <Card className="mb-8 border-bluetick-500/50">
-            <CardHeader><CardTitle className="text-bluetick-500">Stage 4: Final Approval</CardTitle></CardHeader>
+          <Card className="mb-8 border-growbro-500/50">
+            <CardHeader><CardTitle className="text-growbro-500">Stage 4: Final Approval</CardTitle></CardHeader>
             <CardContent>
               <p className="text-gray-400 mb-4">All corrections complete. Waiting for final admin sign-off.</p>
               {(user?.role === 'Administrator' || user?.role === 'Growth Partner') && project.current_stage === 4 && (
@@ -474,8 +474,8 @@ export function ProjectDetails() {
 
         {/* Stage 5: Payment */}
         {project.current_stage >= 5 && (
-          <Card className="mb-8 border-bluetick-500/50">
-            <CardHeader><CardTitle className="text-bluetick-500">Stage 5: Payment</CardTitle></CardHeader>
+          <Card className="mb-8 border-growbro-500/50">
+            <CardHeader><CardTitle className="text-growbro-500">Stage 5: Payment</CardTitle></CardHeader>
             <CardContent>
               {project.current_stage === 5 ? (
                 <>
@@ -500,7 +500,7 @@ export function ProjectDetails() {
                   {project.payment_company_name && (
                     <div className="mb-4 p-4 bg-surface-hover/30 border border-border rounded-lg">
                       <p className="text-sm text-gray-400">Payment collected under company:</p>
-                      <p className="font-bold text-bluetick-500">{project.payment_company_name}</p>
+                      <p className="font-bold text-growbro-500">{project.payment_company_name}</p>
                     </div>
                   )}
 
@@ -524,8 +524,8 @@ export function ProjectDetails() {
 
         {/* Stage 6: Domain & Hosting */}
         {project.current_stage >= 6 && (
-          <Card className="mb-8 border-bluetick-500/50">
-            <CardHeader><CardTitle className="text-bluetick-500">Stage 6: Domain & Hosting</CardTitle></CardHeader>
+          <Card className="mb-8 border-growbro-500/50">
+            <CardHeader><CardTitle className="text-growbro-500">Stage 6: Domain & Hosting</CardTitle></CardHeader>
             <CardContent>
               {user?.role === 'Web Engineer' && project.current_stage === 6 ? (
                 <div className="p-6 border-2 border-dashed border-border rounded-lg bg-surface-hover/20">
@@ -557,8 +557,8 @@ export function ProjectDetails() {
 
         {/* Stage 7: Website Live */}
         {project.current_stage >= 7 && (
-          <Card className="mb-8 border-bluetick-500/50">
-            <CardHeader><CardTitle className="text-bluetick-500">Stage 7: Website Live & Handoff</CardTitle></CardHeader>
+          <Card className="mb-8 border-growbro-500/50">
+            <CardHeader><CardTitle className="text-growbro-500">Stage 7: Website Live & Handoff</CardTitle></CardHeader>
             <CardContent>
               <p className="text-gray-400 mb-4">The website is officially live on the custom domain. Growth Partner will now hand off the final site to the client.</p>
               
@@ -566,7 +566,7 @@ export function ProjectDetails() {
                 <div className="p-6 border border-border rounded-lg bg-surface-hover/20 mt-4">
                   <h3 className="text-lg font-bold text-white mb-2">Final Handoff</h3>
                   <p className="text-sm text-gray-400 mb-4">Please contact the client and provide them with their new website URL. Once the client is satisfied with the launch, click below.</p>
-                  <Button variant="premium" className="bg-bluetick-500 w-full md:w-auto" onClick={gpMarkClientHappy}>
+                  <Button variant="premium" className="bg-growbro-500 w-full md:w-auto" onClick={gpMarkClientHappy}>
                     Client is Happy - Request Project Closure
                   </Button>
                 </div>
@@ -577,8 +577,8 @@ export function ProjectDetails() {
 
         {/* Stage 8: Admin Project Closure */}
         {project.current_stage >= 8 && (
-          <Card className="mb-8 border-bluetick-500/50">
-            <CardHeader><CardTitle className="text-bluetick-500">Stage 8: Official Closure</CardTitle></CardHeader>
+          <Card className="mb-8 border-growbro-500/50">
+            <CardHeader><CardTitle className="text-growbro-500">Stage 8: Official Closure</CardTitle></CardHeader>
             <CardContent>
               <p className="text-gray-400 mb-4">The Growth Partner has confirmed the client is happy and the handoff is complete. Waiting for Admin to officially end the project.</p>
               
@@ -593,7 +593,7 @@ export function ProjectDetails() {
               )}
 
               {project.current_stage >= 9 && (
-                <div className="mt-4 p-6 bg-gradient-to-r from-bluetick-500/20 to-green-500/20 border border-bluetick-500/50 rounded-xl text-center">
+                <div className="mt-4 p-6 bg-gradient-to-r from-growbro-500/20 to-green-500/20 border border-growbro-500/50 rounded-xl text-center">
                   <h2 className="text-2xl font-bold text-white mb-2">🎉 Project Completed! 🎉</h2>
                   <p className="text-gray-300 mb-6">This project has been successfully delivered and closed by the Admin.</p>
                   
@@ -601,7 +601,7 @@ export function ProjectDetails() {
                     <div className="pt-6 border-t border-white/10">
                       <h3 className="text-lg font-bold mb-2">Client needs updates?</h3>
                       <p className="text-sm text-gray-400 mb-4">Re-open this project and loop it back through the pipeline to add new features or maintenance.</p>
-                      <Button variant="outline" className="border-bluetick-500 text-bluetick-500 hover:bg-bluetick-500 hover:text-white" onClick={requestMaintenance}>
+                      <Button variant="outline" className="border-growbro-500 text-growbro-500 hover:bg-growbro-500 hover:text-white" onClick={requestMaintenance}>
                         Request Post-Launch Maintenance
                       </Button>
                     </div>

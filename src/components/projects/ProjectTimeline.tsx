@@ -25,7 +25,7 @@ export function ProjectTimeline({ currentStage }: TimelineProps) {
         
         {/* Progress Line */}
         <div 
-          className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-bluetick-500 z-0 transition-all duration-500"
+          className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-growbro-500 z-0 transition-all duration-500"
           style={{ width: `${(Math.max(0, currentStage - 1) / (STAGES.length - 1)) * 100}%` }}
         />
 
@@ -39,16 +39,16 @@ export function ProjectTimeline({ currentStage }: TimelineProps) {
               <div 
                 className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
                   isCompleted 
-                    ? "bg-bluetick-500 text-white" 
+                    ? "bg-growbro-500 text-white" 
                     : isActive 
-                      ? "bg-surface border-2 border-bluetick-500 text-bluetick-500" 
+                      ? "bg-surface border-2 border-growbro-500 text-growbro-500" 
                       : "bg-surface border border-border text-gray-500"
                 }`}
               >
                 {isCompleted ? <CheckCircle2 size={16} /> : isActive ? <Clock size={16} /> : <Circle size={12} />}
               </div>
               <span className={`text-xs whitespace-nowrap font-medium ${
-                isActive ? "text-bluetick-500" : isCompleted ? "text-white" : "text-gray-500"
+                isActive ? "text-growbro-500" : isCompleted ? "text-white" : "text-gray-500"
               }`}>
                 {stage}
               </span>

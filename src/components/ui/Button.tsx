@@ -9,13 +9,13 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-bluetick-500 text-white hover:bg-bluetick-600 shadow-lg shadow-bluetick-500/20",
+        default: "bg-growbro-500 text-white hover:bg-growbro-600 shadow-lg shadow-growbro-500/20",
         destructive: "bg-red-500 text-slate-50 hover:bg-red-500/90",
         outline: "border border-border bg-transparent hover:bg-surface-hover text-foreground",
         secondary: "bg-surface text-foreground hover:bg-surface-hover border border-border",
         ghost: "hover:bg-surface-hover text-foreground",
-        link: "text-bluetick-500 underline-offset-4 hover:underline",
-        premium: "bg-gradient-to-r from-bluetick-600 to-bluetick-400 text-white hover:opacity-90 shadow-lg shadow-bluetick-500/30",
+        link: "text-growbro-500 underline-offset-4 hover:underline",
+        premium: "bg-gradient-to-r from-growbro-600 to-growbro-400 text-white hover:opacity-90 shadow-lg shadow-growbro-500/30",
       },
       size: {
         default: "h-10 px-4 py-2",

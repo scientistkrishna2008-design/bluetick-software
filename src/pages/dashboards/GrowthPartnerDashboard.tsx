@@ -43,9 +43,9 @@ export function GrowthPartnerDashboard() {
   if (user && !user.gpay_number) {
     return (
       <div className="min-h-screen pt-24 pb-12 px-6 flex items-center justify-center">
-        <Card className="w-full max-w-md border-bluetick-500/50">
+        <Card className="w-full max-w-md border-growbro-500/50">
           <CardHeader>
-            <CardTitle className="text-xl text-bluetick-500">Action Required: Payout Details</CardTitle>
+            <CardTitle className="text-xl text-growbro-500">Action Required: Payout Details</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-gray-400 mb-6 text-sm">You must enter your GPay or UPI transaction number before accessing your dashboard so we can pay you for your work.</p>
@@ -73,13 +73,13 @@ export function GrowthPartnerDashboard() {
 
   const ProjectCard = ({ project }: { project: any }) => (
     <Card 
-      className="cursor-pointer hover:border-bluetick-500 transition-colors"
+      className="cursor-pointer hover:border-growbro-500 transition-colors"
       onClick={() => navigate(`/project/${project.id}`)}
     >
       <CardHeader className="bg-surface-hover/30 border-b border-border pb-3">
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle className="text-lg text-bluetick-500">{project.business_name}</CardTitle>
+            <CardTitle className="text-lg text-growbro-500">{project.business_name}</CardTitle>
             <p className="text-xs font-mono text-gray-500 mt-1">{project.ticket_number}</p>
           </div>
           <div className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-xs font-bold">
@@ -151,7 +151,7 @@ export function GrowthPartnerDashboard() {
           <input 
             type="text" 
             placeholder="Search projects by Business, Client, or ID..." 
-            className="w-full bg-surface border border-border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-bluetick-500 transition-shadow"
+            className="w-full bg-surface border border-border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-growbro-500 transition-shadow"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -160,7 +160,7 @@ export function GrowthPartnerDashboard() {
         <div className="space-y-12">
           {/* Active Projects */}
           <div>
-            <h2 className="text-xl font-bold mb-6 border-b border-border pb-2 text-bluetick-500">Active Projects</h2>
+            <h2 className="text-xl font-bold mb-6 border-b border-border pb-2 text-growbro-500">Active Projects</h2>
             {activeProjects.length === 0 ? (
               <p className="text-gray-400 p-8 border border-dashed border-border rounded-lg text-center">
                 {searchQuery ? "No active projects match your search." : "You haven't started any projects yet. Click \"+ Start New Project\" to begin!"}
