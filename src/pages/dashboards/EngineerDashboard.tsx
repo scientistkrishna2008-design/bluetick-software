@@ -101,7 +101,12 @@ export function EngineerDashboard() {
             <h1 className="text-3xl font-bold tracking-tight">Engineer Dashboard</h1>
             <p className="text-gray-400">Welcome back, {user?.name}</p>
           </div>
-          <Button variant="outline" onClick={logout}>Sign Out</Button>
+          <div className="flex gap-4">
+            <Button variant="outline" className="text-growbroo-500 border-growbroo-500/50 hover:bg-growbroo-500/10" asChild>
+              <a href="tel:7010904686">Get Support</a>
+            </Button>
+            <Button variant="outline" onClick={logout}>Sign Out</Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

@@ -240,7 +240,12 @@ export function ProjectDetails() {
           </div>
           
           <div className="text-left md:text-right w-full md:w-auto bg-surface-hover/30 p-4 rounded-xl border border-border">
-            <p className="text-sm text-gray-400 mb-2">Client: {project.client_name}</p>
+            <div className="flex flex-wrap md:justify-end items-center gap-4 mb-2">
+              <p className="text-sm text-gray-400">Client: {project.client_name}</p>
+              <Button size="sm" variant="outline" className="text-growbroo-500 border-growbroo-500/50 hover:bg-growbroo-500/10" asChild>
+                <a href="tel:7010904686">Get Support</a>
+              </Button>
+            </div>
             
             {user?.role === 'Administrator' ? (
               <div className="flex items-center md:justify-end gap-2 mb-3">

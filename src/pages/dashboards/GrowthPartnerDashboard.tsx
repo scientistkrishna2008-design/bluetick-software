@@ -151,6 +151,9 @@ export function GrowthPartnerDashboard() {
             <p className="text-gray-400">Welcome back, {user?.name}</p>
           </div>
           <div className="flex gap-4">
+            <Button variant="outline" className="text-growbroo-500 border-growbroo-500/50 hover:bg-growbroo-500/10" asChild>
+              <a href="tel:7010904686">Get Support</a>
+            </Button>
             <Button variant="premium" onClick={() => setIsCreateModalOpen(true)}>+ Start New Project</Button>
             <Button variant="outline" onClick={logout}>Sign Out</Button>
           </div>
