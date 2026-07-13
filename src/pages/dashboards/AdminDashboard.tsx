@@ -88,7 +88,8 @@ export function AdminDashboard() {
       setPortfolioUrl("");
       fetchData();
     } else {
-      alert("Failed to add portfolio project. Ensure the table exists in Supabase.");
+      console.error("Supabase Portfolio Insert Error:", error);
+      alert(`Failed to add portfolio project: ${error.message || JSON.stringify(error)}`);
     }
     setIsAddingPortfolio(false);
   };
