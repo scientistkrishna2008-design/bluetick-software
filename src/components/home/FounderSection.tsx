@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { ParticleNetwork } from "./ParticleNetwork";
 
 export function FounderSection() {
   return (
@@ -23,17 +24,14 @@ export function FounderSection() {
             className="relative rounded-[2rem] p-1 bg-gradient-to-b from-growbroo-500/50 to-growbroo-500/5 shadow-[0_0_50px_rgba(34,197,94,0.15)] group"
           >
             {/* Inner glass box */}
-            <div className="bg-[#0B0B0B] rounded-[1.8rem] p-2 relative overflow-hidden h-full border border-growbroo-500/20 group-hover:border-growbroo-500/40 transition-colors duration-500">
+            <div className="bg-[#0B0B0B] rounded-[1.8rem] p-2 relative overflow-hidden w-full aspect-[3/4] min-h-[400px] border border-growbroo-500/20 group-hover:border-growbroo-500/40 transition-colors duration-500">
               
               {/* Subtle geometric lines */}
               <div className="absolute top-0 right-0 w-32 h-32 border-t border-r border-growbroo-500/30 rounded-tr-[1.5rem] opacity-50" />
               <div className="absolute bottom-0 left-0 w-32 h-32 border-b border-l border-growbroo-500/30 rounded-bl-[1.5rem] opacity-50" />
-              
-              <img 
-                src="/ecosystem.jpg" 
-                alt="GrowBro Digital Ecosystem"
-                className="w-full h-auto rounded-[1.2rem] object-cover relative z-10"
-              />
+              <div className="absolute inset-0 z-10 opacity-70">
+                <ParticleNetwork />
+              </div>
               
               {/* Inner glow effect */}
               <div className="absolute inset-0 shadow-[inset_0_0_30px_rgba(34,197,94,0.1)] rounded-[1.5rem] pointer-events-none z-20" />
