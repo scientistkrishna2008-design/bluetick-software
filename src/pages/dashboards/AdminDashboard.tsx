@@ -28,6 +28,7 @@ export function AdminDashboard() {
   // Portfolio form state
   const [portfolioName, setPortfolioName] = useState("");
   const [portfolioUrl, setPortfolioUrl] = useState("");
+  const [portfolioImage, setPortfolioImage] = useState<File | null>(null);
   const [isAddingPortfolio, setIsAddingPortfolio] = useState(false);
 
   useEffect(() => {
@@ -72,20 +73,44 @@ export function AdminDashboard() {
 
   const addPortfolioProject = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!portfolioName || !portfolioUrl) return;
+    if (!portfolioName || !portfolioUrl || !portfolioImage) {
+      alert("Please provide name, URL, and a screenshot image.");
+      return;
+    }
     setIsAddingPortfolio(true);
     
     // Ensure URL has http/https
     const finalUrl = portfolioUrl.startsWith('http') ? portfolioUrl : `https://${portfolioUrl}`;
     
+    // Upload image to Supabase
+    const fileExt = portfolioImage.name.split('.').pop();
+    const fileName = `portfolio_${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+    const filePath = `portfolio/${fileName}`;
+    
+    const { error: uploadError } = await supabase.storage
+      .from('project_images')
+      .upload(filePath, portfolioImage);
+      
+    if (uploadError) {
+      console.error("Upload error:", uploadError);
+      alert("Failed to upload image. Make sure the storage bucket 'project_images' exists and is public.");
+      setIsAddingPortfolio(false);
+      return;
+    }
+    
+    const { data: publicUrlData } = supabase.storage.from('project_images').getPublicUrl(filePath);
+    const imageUrl = publicUrlData.publicUrl;
+    
     const { error } = await supabase.from('portfolio_projects').insert({
       name: portfolioName,
-      url: finalUrl
+      url: finalUrl,
+      image_url: imageUrl
     });
     
     if (!error) {
       setPortfolioName("");
       setPortfolioUrl("");
+      setPortfolioImage(null);
       fetchData();
     } else {
       console.error("Supabase Portfolio Insert Error:", error);
@@ -300,8 +325,18 @@ export function AdminDashboard() {
                       placeholder="e.g. acme.com" 
                     />
                   </div>
+                  <div>
+                    <label className="text-xs text-gray-400 mb-1 block">Screenshot Image</label>
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      required
+                      onChange={e => e.target.files && setPortfolioImage(e.target.files[0])}
+                      className="w-full bg-surface border border-border rounded-md px-3 py-2 text-sm focus:outline-none file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:bg-growbroo-500/20 file:text-growbroo-500" 
+                    />
+                  </div>
                   <Button type="submit" variant="premium" className="w-full" disabled={isAddingPortfolio}>
-                    {isAddingPortfolio ? "Adding..." : "+ Add to Homepage"}
+                    {isAddingPortfolio ? "Uploading..." : "+ Add to Homepage"}
                   </Button>
                 </form>
               </CardContent>

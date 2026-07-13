@@ -87,6 +87,7 @@ create table public.portfolio_projects (
   id uuid default gen_random_uuid() primary key,
   name text not null,
   url text not null,
+  image_url text not null,
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
 alter table public.portfolio_projects disable row level security;

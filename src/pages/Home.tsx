@@ -4,7 +4,7 @@ import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { useNavigate } from "react-router";
 import { PricingCards } from "../components/pricing/PricingCards";
-import { ScrollingPreview } from "../components/portfolio/ScrollingPreview";
+import { PortfolioCard } from "../components/portfolio/PortfolioCard";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
@@ -28,9 +28,9 @@ export function Home() {
     } else {
       // Fallback dummy data if DB is empty
       setPortfolioProjects([
-        { id: 1, name: "Fintech Dashboard", url: "https://stripe.com" },
-        { id: 2, name: "AI Writer", url: "https://jasper.ai" },
-        { id: 3, name: "E-commerce App", url: "https://apple.com" }
+        { id: 1, name: "Fintech Dashboard", url: "https://stripe.com", image_url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80" },
+        { id: 2, name: "AI Writer", url: "https://jasper.ai", image_url: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80" },
+        { id: 3, name: "E-commerce App", url: "https://apple.com", image_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80" }
       ]);
     }
   };
@@ -103,11 +103,12 @@ export function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {portfolioProjects.map((item, index) => (
-              <ScrollingPreview 
+              <PortfolioCard 
                 key={item.id} 
                 index={index}
                 name={item.name}
                 url={item.url}
+                imageUrl={item.image_url}
               />
             ))}
           </div>
