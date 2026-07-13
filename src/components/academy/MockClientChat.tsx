@@ -197,11 +197,11 @@ export function MockClientChat({ isOpen, onClose, client, onComplete }: MockClie
               
               <div className="w-full max-w-md space-y-4 mb-8">
                 {[
-                  { label: "Communication", score: 92 },
-                  { label: "Confidence", score: 88 },
-                  { label: "Sales Technique", score: 85 },
-                  { label: "Professionalism", score: 95 },
-                  { label: "Objection Handling", score: 89 },
+                  { label: "Communication Score", score: 92 },
+                  { label: "Confidence Score", score: 88 },
+                  { label: "Professionalism Score", score: 95 },
+                  { label: "Sales Score", score: 85 },
+                  { label: "Objection Handling Score", score: 89 },
                 ].map((metric, i) => (
                   <div key={i}>
                     <div className="flex justify-between text-sm mb-1">
@@ -221,7 +221,7 @@ export function MockClientChat({ isOpen, onClose, client, onComplete }: MockClie
               </div>
 
               <div className="w-full max-w-md p-6 bg-white/[0.03] border border-white/10 rounded-xl mb-8">
-                <h4 className="text-growbroo-500 font-bold mb-3 uppercase tracking-wider text-xs">AI Feedback</h4>
+                <h4 className="text-growbroo-500 font-bold mb-3 uppercase tracking-wider text-xs">AI Suggestions</h4>
                 <ul className="space-y-3 text-sm text-gray-300">
                   <li className="flex items-start gap-2"><span className="text-green-500">✓</span> You remained professional when they questioned the price.</li>
                   <li className="flex items-start gap-2"><span className="text-green-500">✓</span> Good transition to explaining the workflow.</li>

@@ -1,66 +1,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { GraduationCap, Lock, Unlock, ChevronDown, CheckCircle2, Play, Award, BrainCircuit, Rocket, Target, Star, Users } from "lucide-react";
+import { GraduationCap, Lock, Unlock, ChevronDown, CheckCircle2, Play, Award, BrainCircuit } from "lucide-react";
 import { Card, CardContent } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { MockClientChat } from "../../components/academy/MockClientChat";
 
-const MODULES = [
-  { id: 1, title: "Welcome to GrowBro", time: "2 min", content: "Introduction to our mission and what it means to be a GrowBro Partner." },
-  { id: 2, title: "Understanding Our Services", time: "5 min", content: "Detailed breakdown of the website services and plans we offer to clients." },
-  { id: 3, title: "Ideal Customers", time: "4 min", content: "How to identify businesses that desperately need our services." },
-  { id: 4, title: "Sales Conversation Guide", time: "8 min", content: "Step-by-step scripts on how to approach and talk to potential clients." },
-  { id: 5, title: "Handling Customer Objections", time: "10 min", content: "The most common reasons clients say 'no' and exactly how to respond." },
-  { id: 6, title: "Collecting Client Requirements", time: "5 min", content: "What information you need to collect from the client before we can start." },
-  { id: 7, title: "GrowBro Workflow", time: "4 min", content: "How the 8-stage project pipeline works from start to finish." },
-  { id: 8, title: "Payment Rules", time: "3 min", content: "How advances work, when you get paid, and how payouts are calculated." },
-  { id: 9, title: "GrowBro Quality Verification", time: "3 min", content: "The strict quality checklist every website goes through before delivery." },
-  { id: 10, title: "Professional Behaviour", time: "2 min", content: "Maintaining trust, ethics, and high standards in all your communications." },
-  { id: 11, title: "Sales Resources", time: "2 min", content: "Where to find your portfolio links, pricing PDFs, and email templates." },
-  { id: 12, title: "Frequently Asked Questions", time: "5 min", content: "Answers to the most common questions you will face." },
-  { id: 13, title: "Become a GrowBro Certified Partner", time: "1 min", content: "The final steps to officially unlock your partner status." },
-];
-
-const MOCK_CLIENTS = [
-  {
-    id: 1,
-    name: "Bakery Owner",
-    difficulty: "Easy",
-    initialMessage: "I already get enough customers from my Instagram page. Why do I need a website?",
-    objections: ["Relies on social media", "Doesn't see value", "Low technical knowledge"]
-  },
-  {
-    id: 2,
-    name: "Clinic Owner",
-    difficulty: "Medium",
-    initialMessage: "I looked at your pricing. Your website is too expensive for my small clinic.",
-    objections: ["Price sensitivity", "Needs to see ROI", "Busy schedule"]
-  },
-  {
-    id: 3,
-    name: "Gym Owner",
-    difficulty: "Hard",
-    initialMessage: "Sounds good, but I'm too busy right now. I'll think about it later next year.",
-    objections: ["Procrastination", "Doesn't feel urgency", "Needs lead generation proof"]
-  },
-  {
-    id: 4,
-    name: "Restaurant Owner",
-    difficulty: "Expert",
-    initialMessage: "I don't need a website. People just walk in or use Zomato.",
-    objections: ["Relies on third-party apps", "Doesn't want to pay commissions", "Stubborn mindset"]
-  }
-];
-
-const BADGES = [
-  { id: 1, title: "First Lead", icon: <Target size={24} />, unlocked: true },
-  { id: 2, title: "First Client", icon: <Users size={24} />, unlocked: false },
-  { id: 3, title: "First Delivery", icon: <Rocket size={24} />, unlocked: false },
-  { id: 4, title: "5 Projects", icon: <Star size={24} />, unlocked: false },
-  { id: 5, title: "10 Projects", icon: <Star size={24} />, unlocked: false },
-  { id: 6, title: "Elite Partner", icon: <Award size={24} />, unlocked: false },
-  { id: 7, title: "Top Performer", icon: <Award size={24} className="text-yellow-500" />, unlocked: false },
-];
+import { MODULES, MOCK_CLIENTS, BADGES } from "./academyData";
 
 export function Academy() {
   const [completedModules, setCompletedModules] = useState<number[]>([]);
@@ -165,7 +110,8 @@ export function Academy() {
                 <div className={`mb-3 ${badge.unlocked ? 'text-growbroo-500 drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]' : 'text-gray-500'}`}>
                   {badge.icon}
                 </div>
-                <p className="text-xs font-bold text-center text-gray-300">{badge.title}</p>
+                <p className="text-xs font-bold text-center text-gray-200 mb-1">{badge.title}</p>
+                <p className="text-[10px] text-center text-gray-500 leading-tight">{badge.condition}</p>
               </motion.div>
             ))}
           </div>
@@ -259,10 +205,21 @@ export function Academy() {
                     </div>
                     
                     <div className="mb-6 flex-grow">
-                      <div className="relative p-4 rounded-xl bg-black/40 border border-white/5 italic text-gray-300 text-sm">
+                      <div className="relative p-4 rounded-xl bg-black/40 border border-white/5 italic text-gray-300 text-sm mb-4">
                         <span className="absolute -top-3 left-4 text-4xl text-white/10 font-serif">"</span>
                         {client.initialMessage}
                         <span className="absolute -bottom-5 right-4 text-4xl text-white/10 font-serif">"</span>
+                      </div>
+                      
+                      <div className="space-y-3 mt-4">
+                        <div>
+                          <p className="text-[10px] text-growbroo-500 font-bold uppercase tracking-wider mb-1">Conversation Goal</p>
+                          <p className="text-xs text-gray-300">{client.goal}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-green-500 font-bold uppercase tracking-wider mb-1">Winning Outcome</p>
+                          <p className="text-xs text-gray-300">{client.outcome}</p>
+                        </div>
                       </div>
                     </div>
                     
