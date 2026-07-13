@@ -147,6 +147,11 @@ export function GrowthPartnerDashboard() {
           </div>
         </div>
 
+        {/* Pricing Cards Reference at the Top */}
+        <div className="mb-12 border-b border-border pb-8">
+          <PricingCards />
+        </div>
+
         {/* Search Bar */}
         <div className="mb-12">
           <input 
@@ -186,11 +191,6 @@ export function GrowthPartnerDashboard() {
               </div>
             </div>
           )}
-        </div>
-
-        {/* Pricing Cards Reference */}
-        <div className="mt-20 border-t border-border pt-12">
-          <PricingCards />
         </div>
       </div>
 
