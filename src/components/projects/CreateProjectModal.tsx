@@ -80,13 +80,17 @@ export function CreateProjectModal({ onClose, onSuccess }: { onClose: () => void
       console.error(error);
       alert(`Failed to create project: ${error.message || JSON.stringify(error)}`);
     } else {
-      // Notify Administrator (Hardcoded ID for testing since users table is empty)
-      await supabase.from("notifications").insert({
-        user_id: '64e4d108-ac38-4188-8625-32692a4c2cbb',
-        title: "New Project Submitted 🚀",
-        message: `Growth Partner submitted a new project: ${businessName} (${ticket_number})`,
-        type: "new_project"
-      });
+      // Notify all Administrators
+      const { data: admins } = await supabase.from("users").select("id").eq("role", "Administrator");
+      if (admins && admins.length > 0) {
+        const adminNotifications = admins.map(admin => ({
+          user_id: admin.id,
+          title: "New Project Submitted 🚀",
+          message: `Growth Partner submitted a new project: ${businessName} (${ticket_number})`,
+          type: "new_project"
+        }));
+        await supabase.from("notifications").insert(adminNotifications);
+      }
       
       onSuccess();
       onClose();
