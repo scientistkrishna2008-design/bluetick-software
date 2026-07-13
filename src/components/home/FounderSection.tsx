@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { ParticleNetwork } from "./ParticleNetwork";
 
 export function FounderSection() {
   return (
@@ -24,13 +23,42 @@ export function FounderSection() {
             className="relative rounded-[2rem] p-1 bg-gradient-to-b from-growbroo-500/50 to-growbroo-500/5 shadow-[0_0_50px_rgba(34,197,94,0.15)] group"
           >
             {/* Inner glass box */}
-            <div className="bg-[#0B0B0B] rounded-[1.8rem] p-2 relative overflow-hidden w-full aspect-[3/4] min-h-[400px] border border-growbroo-500/20 group-hover:border-growbroo-500/40 transition-colors duration-500">
+            <div className="bg-[#0B0B0B] rounded-[1.8rem] p-2 relative overflow-hidden h-full border border-growbroo-500/20 group-hover:border-growbroo-500/40 transition-colors duration-500">
               
               {/* Subtle geometric lines */}
               <div className="absolute top-0 right-0 w-32 h-32 border-t border-r border-growbroo-500/30 rounded-tr-[1.5rem] opacity-50" />
               <div className="absolute bottom-0 left-0 w-32 h-32 border-b border-l border-growbroo-500/30 rounded-bl-[1.5rem] opacity-50" />
-              <div className="absolute inset-0 z-10 opacity-70">
-                <ParticleNetwork />
+              
+              {/* Static Background Image */}
+              <img 
+                src="/ecosystem.jpg" 
+                alt="GrowBro Digital Ecosystem"
+                className="w-full h-auto rounded-[1.2rem] object-cover relative z-10 opacity-60"
+              />
+              
+              {/* Revolving Dots Animation Overlay */}
+              <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+                {/* Outer Ring */}
+                <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  className="relative w-3/4 aspect-square rounded-full border border-growbroo-500/20"
+                >
+                  <div className="absolute top-0 left-1/2 -mt-1.5 -ml-1.5 w-3 h-3 bg-growbroo-500 rounded-full shadow-[0_0_15px_#22c55e]" />
+                  <div className="absolute bottom-0 left-1/2 -mb-1.5 -ml-1.5 w-3 h-3 bg-growbroo-500 rounded-full shadow-[0_0_15px_#22c55e]" />
+                  <div className="absolute left-0 top-1/2 -ml-1.5 -mt-1.5 w-3 h-3 bg-growbroo-500 rounded-full shadow-[0_0_15px_#22c55e]" />
+                  <div className="absolute right-0 top-1/2 -mr-1.5 -mt-1.5 w-3 h-3 bg-growbroo-500 rounded-full shadow-[0_0_15px_#22c55e]" />
+                </motion.div>
+                
+                {/* Inner Ring (opposite direction) */}
+                <motion.div 
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                  className="absolute w-[45%] aspect-square rounded-full border border-growbroo-500/10"
+                >
+                  <div className="absolute top-[14%] right-[14%] w-2 h-2 bg-growbroo-500 rounded-full shadow-[0_0_10px_#22c55e]" />
+                  <div className="absolute bottom-[14%] left-[14%] w-2 h-2 bg-growbroo-500 rounded-full shadow-[0_0_10px_#22c55e]" />
+                </motion.div>
               </div>
               
               {/* Inner glow effect */}
