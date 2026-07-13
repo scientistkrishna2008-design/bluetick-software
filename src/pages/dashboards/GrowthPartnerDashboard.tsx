@@ -7,6 +7,7 @@ import { useNavigate } from "react-router";
 import { CreateProjectModal } from "../../components/projects/CreateProjectModal";
 import { Input } from "../../components/ui/Input";
 import { PricingCards } from "../../components/pricing/PricingCards";
+import { NotificationBell } from "../../components/notifications/NotificationBell";
 
 export function GrowthPartnerDashboard() {
   const { user, logout } = useAuth();
@@ -161,6 +162,7 @@ export function GrowthPartnerDashboard() {
               🎓 Partner Academy
             </Button>
             <Button variant="premium" onClick={() => setIsCreateModalOpen(true)}>+ Start New Project</Button>
+            <NotificationBell />
             <Button variant="outline" onClick={logout}>Sign Out</Button>
           </div>
         </div>

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Ca
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { useNavigate } from "react-router";
+import { NotificationBell } from "../../components/notifications/NotificationBell";
 
 export function EngineerDashboard() {
   const { user, logout } = useAuth();
@@ -12,6 +13,7 @@ export function EngineerDashboard() {
   const [stage2Projects, setStage2Projects] = useState<any[]>([]);
   const [stage6Projects, setStage6Projects] = useState<any[]>([]);
   const [completedProjects, setCompletedProjects] = useState<any[]>([]);
+  const [pendingAssignments, setPendingAssignments] = useState<any[]>([]);
   const [tickets, setTickets] = useState<any[]>([]);
   const [gpayInput, setGpayInput] = useState("");
 
@@ -24,11 +26,21 @@ export function EngineerDashboard() {
   const fetchAssignedWork = async () => {
     if (!user) return;
     
-    // Fetch Stage 2 projects
+    // Fetch Pending Assignments
+    const { data: pendingData } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("engineer_id", user.uid)
+      .eq("engineer_status", "Pending Acceptance")
+      .order("created_at", { ascending: false });
+    if (pendingData) setPendingAssignments(pendingData);
+
+    // Fetch Stage 2 projects (Accepted)
     const { data: s2Data } = await supabase
       .from("projects")
       .select("*")
       .eq("engineer_id", user.uid)
+      .eq("engineer_status", "Accepted")
       .eq("current_stage", 2)
       .order("created_at", { ascending: false });
     if (s2Data) setStage2Projects(s2Data);
@@ -63,6 +75,28 @@ export function EngineerDashboard() {
       );
       setTickets(myTickets);
     }
+  };
+
+  const handleAcceptProject = async (projectId: string) => {
+    await supabase.from("projects").update({ engineer_status: "Accepted" }).eq("id", projectId);
+    fetchAssignedWork();
+  };
+
+  const handleDenyProject = async (project: any) => {
+    // Unassign and notify admin
+    await supabase.from("projects").update({ 
+      engineer_status: "Denied",
+      engineer_id: null 
+    }).eq("id", project.id);
+
+    await supabase.from("notifications").insert({
+      user_id: project.admin_id, // Assuming admin_id exists, otherwise we should fetch admins
+      title: "Project Assignment Denied",
+      message: `Engineer ${user?.name || user?.email} has denied the project ${project.business_name} (${project.ticket_number}). Please reassign.`,
+      type: "assignment"
+    });
+
+    fetchAssignedWork();
   };
 
   const saveGPay = async () => {
@@ -105,6 +139,7 @@ export function EngineerDashboard() {
             <Button variant="outline" className="text-growbroo-500 border-growbroo-500/50 hover:bg-growbroo-500/10" asChild>
               <a href="tel:7010904686">Get Support</a>
             </Button>
+            <NotificationBell />
             <Button variant="outline" onClick={logout}>Sign Out</Button>
           </div>
         </div>
@@ -113,6 +148,46 @@ export function EngineerDashboard() {
           
           {/* Action Required */}
           <div>
+            {pendingAssignments.length > 0 && (
+              <>
+                <h2 className="text-xl font-bold mb-6 text-purple-500 border-b border-border pb-2">
+                  New Assignments
+                </h2>
+                <div className="space-y-4 mb-8">
+                  {pendingAssignments.map(project => (
+                    <Card key={project.id} className="border-purple-500/50">
+                      <CardHeader className="bg-purple-500/5 pb-3">
+                        <CardTitle className="flex justify-between items-center text-lg">
+                          {project.ticket_number}
+                          <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-500/20 text-purple-500">
+                            Pending Acceptance
+                          </span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="pt-4">
+                        <p className="text-sm font-medium mb-1">{project.business_name}</p>
+                        <p className="text-xs text-gray-400 mb-4 line-clamp-2">{project.requirements}</p>
+                        <div className="flex gap-3">
+                          <Button 
+                            className="flex-1 bg-green-500/10 text-green-500 border border-green-500/30 hover:bg-green-500 hover:text-white"
+                            onClick={() => handleAcceptProject(project.id)}
+                          >
+                            Accept
+                          </Button>
+                          <Button 
+                            className="flex-1 bg-red-500/10 text-red-500 border border-red-500/30 hover:bg-red-500 hover:text-white"
+                            onClick={() => handleDenyProject(project)}
+                          >
+                            Deny
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </>
+            )}
+
             <h2 className="text-xl font-bold mb-6 text-growbroo-400 border-b border-border pb-2">
               Action Required (Stage 2)
             </h2>

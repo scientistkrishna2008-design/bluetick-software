@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { supabase } from "../lib/supabase";
+import { requestFirebaseNotificationPermission } from "../lib/firebase";
 
 interface AppUser {
   uid: string;
@@ -67,6 +68,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           status: userProfile.status,
           gpay_number: userProfile.gpay_number
         });
+        
+        // Setup Push Notifications
+        const token = await requestFirebaseNotificationPermission();
+        if (token) {
+          // Check if token already exists
+          const { data: existingToken } = await supabase.from('push_subscriptions').select('id').eq('token', token).single();
+          if (!existingToken) {
+            await supabase.from('push_subscriptions').insert({
+              user_id: supabaseUser.id,
+              token: token,
+              platform: 'web'
+            });
+          }
+        }
+
       } else {
         // Fallback if profile not created yet
         setUser({

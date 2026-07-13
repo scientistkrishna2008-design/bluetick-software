@@ -77,8 +77,17 @@ export function ProjectDetails() {
 
   const assignEngineer = async (engineerId: string) => {
     if (!project) return;
-    const { data } = await supabase.from("projects").update({ engineer_id: engineerId }).eq("id", project.id).select().single();
-    if (data) setProject(data);
+    const { data } = await supabase.from("projects").update({ engineer_id: engineerId, engineer_status: "Pending Acceptance" }).eq("id", project.id).select().single();
+    if (data) {
+      setProject(data);
+      // Notify the engineer
+      await supabase.from("notifications").insert({
+        user_id: engineerId,
+        title: "New Project Assigned",
+        message: `You have been assigned to ${project.business_name} (${project.ticket_number}). Please accept or deny it in your dashboard.`,
+        type: "assignment"
+      });
+    }
   };
 
   // Stage 2 Actions
@@ -135,6 +144,17 @@ export function ProjectDetails() {
   const markTicketSolved = async (correctionId: string) => {
     await supabase.from("project_corrections").update({ status: 'Ready For Review' }).eq("id", correctionId);
     fetchCorrections();
+    
+    // Notify the Growth Partner
+    if (project?.growth_partner_id) {
+      await supabase.from("notifications").insert({
+        user_id: project.growth_partner_id,
+        title: "Ticket Resolved ✅",
+        message: `The engineer has resolved a ticket for ${project.business_name}. Please review it.`,
+        type: "ticket_resolved",
+        link: `/project/${project.id}`
+      });
+    }
   };
 
   const approveCorrection = async (correctionId: string) => {

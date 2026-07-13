@@ -7,6 +7,7 @@ import { supabase } from "../../lib/supabase";
 import { CreateProjectModal } from "../../components/projects/CreateProjectModal";
 import { GrowthPartnerProjectsModal } from "../../components/admin/GrowthPartnerProjectsModal";
 import { useNavigate } from "react-router";
+import { NotificationBell } from "../../components/notifications/NotificationBell";
 
 const mockData = [
   { name: 'Jan', revenue: 4000 },
@@ -65,7 +66,15 @@ export function AdminDashboard() {
 
   const approveUser = async (id: string) => {
     const { error } = await supabase.from('users').update({ status: 'Approved' }).eq('id', id);
-    if (!error) setPendingUsers(pendingUsers.filter(u => u.id !== id));
+    if (!error) {
+      setPendingUsers(pendingUsers.filter(u => u.id !== id));
+      await supabase.from('notifications').insert({
+        user_id: id,
+        title: "Account Verified ✅",
+        message: "You are verified by the Admin. Welcome to the GrowBro team!",
+        type: "verification"
+      });
+    }
   };
 
   const rejectUser = async (id: string) => {
@@ -136,7 +145,10 @@ export function AdminDashboard() {
             <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
             <p className="text-gray-400">Welcome back, {user?.name}</p>
           </div>
-          <Button variant="outline" onClick={logout}>Sign Out</Button>
+          <div className="flex items-center gap-4">
+            <NotificationBell />
+            <Button variant="outline" onClick={logout}>Sign Out</Button>
+          </div>
         </div>
 
         {/* Stats */}

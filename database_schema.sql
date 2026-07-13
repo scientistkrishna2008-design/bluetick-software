@@ -4,6 +4,7 @@ create table public.projects (
   ticket_number text not null unique,
   growth_partner_id uuid references auth.users,
   engineer_id uuid references auth.users,
+  engineer_status text default 'Pending Acceptance', -- Pending Acceptance, Accepted, Denied
   admin_id uuid references auth.users,
   
   -- Stage Tracking
@@ -57,10 +58,33 @@ create table public.project_corrections (
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
 
+-- Table: notifications
+create table public.notifications (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users on delete cascade,
+  title text not null,
+  message text not null,
+  type text not null, -- 'verification', 'assignment', 'ticket_resolved', 'stage_update'
+  read boolean default false,
+  link text,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
+-- Table: push_subscriptions
+create table public.push_subscriptions (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users on delete cascade,
+  token text not null unique,
+  platform text default 'web',
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
 -- Turn off RLS temporarily for easy testing
 alter table public.projects disable row level security;
 alter table public.project_samples disable row level security;
 alter table public.project_corrections disable row level security;
+alter table public.notifications disable row level security;
+alter table public.push_subscriptions disable row level security;
 
 -- Auto-confirm emails trigger to bypass Supabase Email Confirmation
 create or replace function public.auto_confirm_users()
