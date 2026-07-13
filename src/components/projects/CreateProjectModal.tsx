@@ -80,6 +80,18 @@ export function CreateProjectModal({ onClose, onSuccess }: { onClose: () => void
       console.error(error);
       alert(`Failed to create project: ${error.message || JSON.stringify(error)}`);
     } else {
+      // Notify all Administrators
+      const { data: admins } = await supabase.from("users").select("id").eq("role", "Administrator");
+      if (admins && admins.length > 0) {
+        const adminNotifications = admins.map(admin => ({
+          user_id: admin.id,
+          title: "New Project Submitted 🚀",
+          message: `Growth Partner submitted a new project: ${businessName} (${ticket_number})`,
+          type: "new_project"
+        }));
+        await supabase.from("notifications").insert(adminNotifications);
+      }
+      
       onSuccess();
       onClose();
     }
