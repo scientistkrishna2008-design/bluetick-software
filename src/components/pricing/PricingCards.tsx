@@ -1,4 +1,4 @@
-import { CheckCircle2, ShieldCheck, LayoutTemplate, LineChart, Users, Wallet, Laptop, CheckCircle, Award, CircleDot, Circle } from "lucide-react";
+import { CheckCircle2, ShieldCheck, LayoutTemplate, LineChart, CircleDot, Circle, Search, CreditCard, ClipboardList, Monitor, UserCheck, Rocket, PartyPopper, BadgeCheck } from "lucide-react";
 import { Card } from "../ui/Card";
 
 interface PricingCardsProps {
@@ -148,24 +148,74 @@ export function PricingCards({ selectable = false, selectedPlan, onSelectPlan, h
             </h4>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-center relative">
-            <div className="hidden md:block absolute top-6 left-[10%] right-[10%] h-[1px] bg-border z-0 border-dashed border-t" />
+          <div className="max-w-2xl mx-auto relative pl-4 sm:pl-8">
+            <div className="absolute top-8 bottom-8 left-[2.2rem] sm:left-[3.2rem] w-[2px] bg-growbroo-500/20" />
             
-            {[
-              { icon: Users, title: "1. Sales Partner", desc: "Finds & talks to the client, explains the plan & collects requirements." },
-              { icon: Wallet, title: "2. Payment", desc: "Client makes the payment to Growbroo." },
-              { icon: Laptop, title: "3. Website Creator", desc: "Builds the website as per requirements." },
-              { icon: CheckCircle, title: "4. Client Approval", desc: "Sales Partner shares the website with the client and ensures complete satisfaction." },
-              { icon: Award, title: "5. Payout", desc: "After delivery, payouts are processed to Sales Partner & Website Creator." }
-            ].map((step, i) => (
-              <div key={i} className="relative z-10 flex flex-col items-center">
-                <div className="h-12 w-12 bg-surface border border-border rounded-full flex items-center justify-center text-growbroo-500 mb-4 shadow-xl">
-                  <step.icon size={20} />
+            <div className="space-y-8">
+              {/* Pre-Verification Steps */}
+              {[
+                { icon: Search, title: "Sales Partner Finds Client" },
+                { icon: CreditCard, title: "Secure Payment to GrowBro" },
+                { icon: ClipboardList, title: "Requirements Collected" },
+                { icon: Monitor, title: "Website Creator Builds Website" },
+                { icon: UserCheck, title: "Client Reviews & Requests Changes" },
+              ].map((step, i) => (
+                <div key={i} className="relative z-10 flex items-center gap-6">
+                  <div className="h-10 w-10 rounded-full bg-surface border border-growbroo-500/30 flex items-center justify-center text-growbroo-500 flex-shrink-0 shadow-[0_0_10px_rgba(34,197,94,0.1)]">
+                    <step.icon size={18} />
+                  </div>
+                  <h5 className="font-bold text-lg text-gray-300">{step.title}</h5>
                 </div>
-                <h5 className="font-bold text-sm mb-2">{step.title}</h5>
-                <p className="text-xs text-gray-500 leading-relaxed">{step.desc}</p>
+              ))}
+
+              {/* Step 6: GrowBro Verification (Visually Special) */}
+              <div className="relative z-10 flex flex-col sm:flex-row items-start gap-4 sm:gap-6 pt-4 pb-4">
+                <div className="h-14 w-14 -ml-2 rounded-full bg-growbroo-500/10 border-2 border-growbroo-500 flex items-center justify-center text-growbroo-500 flex-shrink-0 shadow-[0_0_30px_rgba(34,197,94,0.4)] sm:mt-6">
+                  <ShieldCheck size={28} />
+                </div>
+                <div className="bg-surface/60 border border-growbroo-500/30 rounded-2xl p-6 w-full shadow-[0_0_30px_rgba(34,197,94,0.08)] relative overflow-hidden">
+                  <div className="absolute -top-10 -right-10 w-40 h-40 bg-growbroo-500/10 rounded-full blur-3xl pointer-events-none" />
+                  
+                  <h5 className="font-bold text-2xl text-white mb-6 flex items-center gap-2">
+                    GrowBro Verification 
+                  </h5>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 mb-8 relative z-10">
+                    {[
+                      "Mobile Responsive",
+                      "All Links & Buttons Tested",
+                      "Contact Forms Verified",
+                      "WhatsApp & Google Maps Checked",
+                      "Images Optimized",
+                      "Speed Tested",
+                      "Spelling & Grammar Reviewed",
+                      "Basic SEO Verified",
+                      "Final Quality Inspection"
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
+                        <CheckCircle2 size={16} className="text-growbroo-500 flex-shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="inline-flex items-center gap-2 bg-growbroo-500/10 border border-growbroo-500 text-growbroo-500 px-5 py-2 rounded-lg font-bold uppercase tracking-widest text-sm shadow-[0_0_20px_rgba(34,197,94,0.2)]">
+                    <BadgeCheck size={18} /> GrowBro Verified
+                  </div>
+                </div>
               </div>
-            ))}
+
+              {/* Post-Verification Steps */}
+              {[
+                { icon: Rocket, title: "Final Website Delivery" },
+                { icon: PartyPopper, title: "Project Completed" },
+              ].map((step, i) => (
+                <div key={i} className="relative z-10 flex items-center gap-6">
+                  <div className="h-10 w-10 rounded-full bg-surface border border-growbroo-500/30 flex items-center justify-center text-growbroo-500 flex-shrink-0 shadow-[0_0_10px_rgba(34,197,94,0.1)]">
+                    <step.icon size={18} />
+                  </div>
+                  <h5 className="font-bold text-lg text-gray-300">{step.title}</h5>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
