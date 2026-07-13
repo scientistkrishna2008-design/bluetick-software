@@ -6,6 +6,7 @@ import { Button } from "../../components/ui/Button";
 import { useNavigate } from "react-router";
 import { CreateProjectModal } from "../../components/projects/CreateProjectModal";
 import { Input } from "../../components/ui/Input";
+import { PricingCards } from "../../components/pricing/PricingCards";
 
 export function GrowthPartnerDashboard() {
   const { user, logout } = useAuth();
@@ -185,6 +186,11 @@ export function GrowthPartnerDashboard() {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Pricing Cards Reference */}
+        <div className="mt-20 border-t border-border pt-12">
+          <PricingCards />
         </div>
       </div>
 

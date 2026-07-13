@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { useNavigate } from "react-router";
+import { PricingCards } from "../components/pricing/PricingCards";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -146,6 +147,11 @@ export function Home() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="bg-background border-t border-border relative z-10">
+        <PricingCards />
       </section>
 
       {/* CTA Section */}
