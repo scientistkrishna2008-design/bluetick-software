@@ -4,6 +4,9 @@ import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { useNavigate } from "react-router";
 import { PricingCards } from "../components/pricing/PricingCards";
+import { ScrollingPreview } from "../components/portfolio/ScrollingPreview";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -12,6 +15,25 @@ const fadeIn = {
 
 export function Home() {
   const navigate = useNavigate();
+  const [portfolioProjects, setPortfolioProjects] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchPortfolio();
+  }, []);
+
+  const fetchPortfolio = async () => {
+    const { data } = await supabase.from('portfolio_projects').select('*').order('created_at', { ascending: false });
+    if (data && data.length > 0) {
+      setPortfolioProjects(data);
+    } else {
+      // Fallback dummy data if DB is empty
+      setPortfolioProjects([
+        { id: 1, name: "Fintech Dashboard", url: "https://stripe.com" },
+        { id: 2, name: "AI Writer", url: "https://jasper.ai" },
+        { id: 3, name: "E-commerce App", url: "https://apple.com" }
+      ]);
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -79,30 +101,14 @@ export function Home() {
             <p className="text-gray-400 max-w-2xl mx-auto">Showcasing our recent premium SaaS implementations.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3].map((item) => (
-              <motion.div
-                key={item}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: item * 0.1 }}
-                className="group relative overflow-hidden rounded-2xl bg-surface border border-border"
-              >
-                <div className="aspect-video bg-surface-hover w-full overflow-hidden">
-                  {/* Placeholder for project image */}
-                  <div className="w-full h-full bg-gradient-to-br from-surface to-background flex items-center justify-center text-gray-500 group-hover:scale-105 transition-transform duration-500">
-                    Project Preview
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">Project Name {item}</h3>
-                  <p className="text-sm text-gray-400 mb-4">Fintech SaaS Platform</p>
-                  <Button variant="ghost" className="p-0 text-growbroo-500 hover:text-growbroo-400 hover:bg-transparent">
-                    View Live <ArrowRight size={16} className="ml-2" />
-                  </Button>
-                </div>
-              </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+            {portfolioProjects.map((item, index) => (
+              <ScrollingPreview 
+                key={item.id} 
+                index={index}
+                name={item.name}
+                url={item.url}
+              />
             ))}
           </div>
         </div>

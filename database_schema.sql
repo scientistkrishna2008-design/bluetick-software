@@ -81,3 +81,12 @@ execute function public.auto_confirm_users();
 insert into storage.buckets (id, name, public) values ('project_images', 'project_images', true) on conflict do nothing;
 create policy "Public Access" on storage.objects for select using ( bucket_id = 'project_images' );
 create policy "Public Insert" on storage.objects for insert with check ( bucket_id = 'project_images' );
+
+-- Table: portfolio_projects (Homepage Portfolio)
+create table public.portfolio_projects (
+  id uuid default gen_random_uuid() primary key,
+  name text not null,
+  url text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+alter table public.portfolio_projects disable row level security;

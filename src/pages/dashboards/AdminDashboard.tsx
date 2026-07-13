@@ -21,8 +21,14 @@ export function AdminDashboard() {
   const navigate = useNavigate();
   const [pendingUsers, setPendingUsers] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
+  const [portfolioProjects, setPortfolioProjects] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [showCreateProject, setShowCreateProject] = useState(false);
+  
+  // Portfolio form state
+  const [portfolioName, setPortfolioName] = useState("");
+  const [portfolioUrl, setPortfolioUrl] = useState("");
+  const [isAddingPortfolio, setIsAddingPortfolio] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -42,6 +48,10 @@ export function AdminDashboard() {
       console.error("Error fetching projects:", error);
     }
     if (projectsData) setProjects(projectsData);
+    
+    // Fetch portfolio projects
+    const { data: portfolioData } = await supabase.from('portfolio_projects').select('*').order('created_at', { ascending: false });
+    if (portfolioData) setPortfolioProjects(portfolioData);
   };
 
   const markPaid = async (projectId: string, role: 'engineer' | 'growth_partner') => {
@@ -58,6 +68,36 @@ export function AdminDashboard() {
   const rejectUser = async (id: string) => {
     const { error } = await supabase.from('users').update({ status: 'Rejected' }).eq('id', id);
     if (!error) setPendingUsers(pendingUsers.filter(u => u.id !== id));
+  };
+
+  const addPortfolioProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!portfolioName || !portfolioUrl) return;
+    setIsAddingPortfolio(true);
+    
+    // Ensure URL has http/https
+    const finalUrl = portfolioUrl.startsWith('http') ? portfolioUrl : `https://${portfolioUrl}`;
+    
+    const { error } = await supabase.from('portfolio_projects').insert({
+      name: portfolioName,
+      url: finalUrl
+    });
+    
+    if (!error) {
+      setPortfolioName("");
+      setPortfolioUrl("");
+      fetchData();
+    } else {
+      alert("Failed to add portfolio project. Ensure the table exists in Supabase.");
+    }
+    setIsAddingPortfolio(false);
+  };
+
+  const removePortfolioProject = async (id: string) => {
+    if (window.confirm("Remove this project from the homepage?")) {
+      await supabase.from('portfolio_projects').delete().eq('id', id);
+      fetchData();
+    }
   };
 
   return (
@@ -224,6 +264,82 @@ export function AdminDashboard() {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Portfolio Management Section */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">Homepage Portfolio</h2>
+            <p className="text-sm text-gray-400">Manage live previews shown on the main website</p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-1 border-growbroo-500/30">
+              <CardHeader><CardTitle className="text-growbroo-500">Add New Project</CardTitle></CardHeader>
+              <CardContent>
+                <form onSubmit={addPortfolioProject} className="space-y-4">
+                  <div>
+                    <label className="text-xs text-gray-400 mb-1 block">Project Name</label>
+                    <input 
+                      type="text" 
+                      required 
+                      value={portfolioName}
+                      onChange={e => setPortfolioName(e.target.value)}
+                      className="w-full bg-surface border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-growbroo-500" 
+                      placeholder="e.g. Acme SaaS" 
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-400 mb-1 block">Live URL</label>
+                    <input 
+                      type="text" 
+                      required 
+                      value={portfolioUrl}
+                      onChange={e => setPortfolioUrl(e.target.value)}
+                      className="w-full bg-surface border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-growbroo-500" 
+                      placeholder="e.g. acme.com" 
+                    />
+                  </div>
+                  <Button type="submit" variant="premium" className="w-full" disabled={isAddingPortfolio}>
+                    {isAddingPortfolio ? "Adding..." : "+ Add to Homepage"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            <Card className="lg:col-span-2">
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-left">
+                    <thead className="text-xs text-gray-400 uppercase bg-surface-hover/50 border-b border-border">
+                      <tr>
+                        <th className="px-6 py-4">Project Name</th>
+                        <th className="px-6 py-4">Live URL</th>
+                        <th className="px-6 py-4 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {portfolioProjects.map(p => (
+                        <tr key={p.id} className="border-b border-border hover:bg-surface-hover/30">
+                          <td className="px-6 py-4 font-bold">{p.name}</td>
+                          <td className="px-6 py-4 text-growbroo-500">
+                            <a href={p.url} target="_blank" rel="noreferrer" className="hover:underline">{p.url}</a>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <Button size="sm" variant="destructive" onClick={() => removePortfolioProject(p.id)}>Remove</Button>
+                          </td>
+                        </tr>
+                      ))}
+                      {portfolioProjects.length === 0 && (
+                        <tr>
+                          <td colSpan={3} className="px-6 py-8 text-center text-gray-400">No portfolio items added yet.</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Charts & Pending Users */}
