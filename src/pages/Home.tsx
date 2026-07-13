@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { PricingCards } from "../components/pricing/PricingCards";
 import { PortfolioCard } from "../components/portfolio/PortfolioCard";
 import { FounderSection } from "../components/home/FounderSection";
+import { FooterLegalSection } from "../components/home/FooterLegalSection";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
@@ -177,15 +178,7 @@ export function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-background py-12 px-6 text-center">
-        <div className="text-2xl font-bold tracking-tighter mb-4 text-gray-400">Growbroo<span className="text-growbroo-500">.</span></div>
-        <p className="text-sm text-gray-600 mb-8">© 2026 Growbroo. All rights reserved.</p>
-        <div className="flex justify-center gap-4 text-sm text-gray-500">
-          <a href="#" className="hover:text-white">Privacy Policy</a>
-          <a href="#" className="hover:text-white">Terms of Service</a>
-          <a href="#" className="hover:text-white">Contact</a>
-        </div>
-      </footer>
+      <FooterLegalSection />
     </div>
   );
 }
