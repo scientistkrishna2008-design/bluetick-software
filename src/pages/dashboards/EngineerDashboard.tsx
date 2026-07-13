@@ -132,7 +132,16 @@ export function EngineerDashboard() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="pt-4">
-                      <p className="text-sm font-medium mb-1">{project.business_name}</p>
+                      <div className="flex justify-between items-start mb-1">
+                        <p className="text-sm font-medium">{project.business_name}</p>
+                        {project.plan_type && (
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex-shrink-0 ${
+                            project.plan_type === 'Plan 2' ? 'bg-growbroo-500/20 text-growbroo-500' : 'bg-gray-800 text-gray-400'
+                          }`}>
+                            {project.plan_type}
+                          </span>
+                        )}
+                      </div>
                       <p className="text-xs text-gray-400">Click to view project details and submit live link.</p>
                       
                       <div className="pt-3 border-t border-border mt-3 text-center">
@@ -168,7 +177,16 @@ export function EngineerDashboard() {
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="pt-4">
-                        <p className="text-sm font-medium mb-1">{project.business_name}</p>
+                        <div className="flex justify-between items-start mb-1">
+                          <p className="text-sm font-medium">{project.business_name}</p>
+                          {project.plan_type && (
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex-shrink-0 ${
+                              project.plan_type === 'Plan 2' ? 'bg-growbroo-500/20 text-growbroo-500' : 'bg-gray-800 text-gray-400'
+                            }`}>
+                              {project.plan_type}
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs text-gray-400">Click to connect the final custom domain.</p>
 
                         <div className="pt-3 border-t border-border mt-3 text-center">
@@ -249,7 +267,16 @@ export function EngineerDashboard() {
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="pt-4">
-                        <p className="text-sm font-medium mb-1 text-gray-400">{project.business_name}</p>
+                        <div className="flex justify-between items-start mb-1">
+                          <p className="text-sm font-medium text-gray-400">{project.business_name}</p>
+                          {project.plan_type && (
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex-shrink-0 ${
+                              project.plan_type === 'Plan 2' ? 'bg-growbroo-500/20 text-growbroo-500' : 'bg-gray-800 text-gray-500'
+                            }`}>
+                              {project.plan_type}
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs text-green-500 font-bold mb-3">{project.final_domain}</p>
 
                         <div className="pt-3 border-t border-border mt-3 text-center">

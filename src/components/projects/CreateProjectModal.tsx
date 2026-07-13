@@ -2,10 +2,12 @@ import { useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
+import { PricingCards } from "../pricing/PricingCards";
 
 export function CreateProjectModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: () => void }) {
   const [loading, setLoading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [selectedPlan, setSelectedPlan] = useState<string>("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -41,6 +43,10 @@ export function CreateProjectModal({ onClose, onSuccess }: { onClose: () => void
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!selectedPlan) {
+      alert("Please select a pricing plan.");
+      return;
+    }
     setLoading(true);
     
     const formData = new FormData(e.currentTarget);
@@ -66,7 +72,8 @@ export function CreateProjectModal({ onClose, onSuccess }: { onClose: () => void
       requirements,
       reference_images,
       stage_1_status: "Discussion Completed",
-      growth_partner_id: userId
+      growth_partner_id: userId,
+      plan_type: selectedPlan
     });
 
     if (error) {
@@ -85,8 +92,18 @@ export function CreateProjectModal({ onClose, onSuccess }: { onClose: () => void
         <h2 className="text-xl font-bold mb-4">Start New Project</h2>
         <p className="text-sm text-gray-400 mb-6">Create Stage 1: Initial Discussion</p>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="bg-surface-hover/30 p-2 rounded-xl border border-border">
+            <PricingCards 
+              selectable 
+              selectedPlan={selectedPlan} 
+              onSelectPlan={setSelectedPlan} 
+              hideHowItWorks 
+            />
+          </div>
+          
+          <div className="space-y-4">
+            <div>
             <label className="text-sm text-gray-400">Business Name</label>
             <Input name="businessName" required placeholder="e.g. Acme Corp" />
           </div>
@@ -120,10 +137,11 @@ export function CreateProjectModal({ onClose, onSuccess }: { onClose: () => void
               <p className="text-xs text-growbroo-400 mt-2">{selectedFiles.length} file(s) selected.</p>
             )}
           </div>
+          </div>
           
-          <div className="flex justify-end gap-2 pt-4">
+          <div className="flex justify-end gap-2 pt-4 border-t border-border">
             <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
-            <Button type="submit" variant="premium" disabled={loading}>
+            <Button type="submit" variant="premium" disabled={loading || !selectedPlan}>
               {loading ? "Creating & Uploading..." : "Submit to Admin"}
             </Button>
           </div>

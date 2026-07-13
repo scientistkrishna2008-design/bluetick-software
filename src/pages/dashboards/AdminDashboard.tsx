@@ -114,7 +114,16 @@ export function AdminDashboard() {
                   <tbody>
                     {projects.map(p => (
                       <tr key={p.id} className="border-b border-border hover:bg-surface-hover/30">
-                        <td className="px-6 py-4 font-mono text-growbroo-400">{p.ticket_number}</td>
+                        <td className="px-6 py-4">
+                          <span className="font-mono text-growbroo-400 block">{p.ticket_number}</span>
+                          {p.plan_type && (
+                            <span className={`inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                              p.plan_type === 'Plan 2' ? 'bg-growbroo-500/20 text-growbroo-500' : 'bg-gray-800 text-gray-400'
+                            }`}>
+                              {p.plan_type}
+                            </span>
+                          )}
+                        </td>
                         <td className="px-6 py-4 font-medium">{p.business_name}</td>
                         <td className="px-6 py-4">Stage {p.current_stage}</td>
                         <td className="px-6 py-4">
@@ -160,8 +169,17 @@ export function AdminDashboard() {
                     {projects.filter(p => p.current_stage >= 5).map(p => (
                       <tr key={p.id} className="border-b border-border hover:bg-surface-hover/30">
                         <td className="px-6 py-4">
-                          <p className="font-mono text-growbroo-400">{p.ticket_number}</p>
-                          <p className="font-medium text-xs text-gray-400">{p.business_name}</p>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-growbroo-400">{p.ticket_number}</span>
+                            {p.plan_type && (
+                              <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                                p.plan_type === 'Plan 2' ? 'bg-growbroo-500/20 text-growbroo-500' : 'bg-gray-800 text-gray-400'
+                              }`}>
+                                {p.plan_type}
+                              </span>
+                            )}
+                          </div>
+                          <p className="font-medium text-xs text-gray-400 mt-1">{p.business_name}</p>
                         </td>
                         <td className="px-6 py-4">Stage {p.current_stage}</td>
                         <td className="px-6 py-4">

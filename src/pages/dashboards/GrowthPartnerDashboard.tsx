@@ -81,7 +81,16 @@ export function GrowthPartnerDashboard() {
         <div className="flex justify-between items-start">
           <div>
             <CardTitle className="text-lg text-growbroo-500">{project.business_name}</CardTitle>
-            <p className="text-xs font-mono text-gray-500 mt-1">{project.ticket_number}</p>
+            <div className="flex items-center gap-2 mt-1">
+              <p className="text-xs font-mono text-gray-500">{project.ticket_number}</p>
+              {project.plan_type && (
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                  project.plan_type === 'Plan 2' ? 'bg-growbroo-500/20 text-growbroo-500' : 'bg-gray-800 text-gray-400'
+                }`}>
+                  {project.plan_type}
+                </span>
+              )}
+            </div>
           </div>
           <div className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-xs font-bold">
             S{project.current_stage}

@@ -19,6 +19,7 @@ create table public.projects (
   pages_requested integer,
   reference_images text[], -- Added for image uploads
   design_references text,
+  plan_type text default 'Plan 1',
   budget text,
   deadline date,
   notes text,

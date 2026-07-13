@@ -192,6 +192,16 @@ export function ProjectDetails() {
     if (data) setProject(data);
   };
 
+  const upgradePlan = async () => {
+    if (window.confirm("Are you sure you want to upgrade this project to Plan 2 (Business)?")) {
+      const { data } = await supabase.from("projects").update({ plan_type: "Plan 2" }).eq("id", project.id).select().single();
+      if (data) {
+        setProject(data);
+        alert("Project upgraded to Plan 2 successfully!");
+      }
+    }
+  };
+
   if (loading) return <div className="min-h-screen pt-24 text-center">Loading...</div>;
   if (!project) return <div className="min-h-screen pt-24 text-center">Project not found</div>;
 
@@ -205,8 +215,28 @@ export function ProjectDetails() {
             <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4 text-gray-400 p-0 hover:bg-transparent hover:text-white">
               ← Back
             </Button>
-            <h1 className="text-3xl font-bold">{project.business_name}</h1>
-            <p className="text-gray-400">Project ID: <span className="text-growbroo-400 font-mono">{project.ticket_number}</span></p>
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl font-bold">{project.business_name}</h1>
+              {project.plan_type && (
+                <span className={`px-2 py-1 rounded text-xs font-bold uppercase tracking-wider ${
+                  project.plan_type === 'Plan 2' ? 'bg-growbroo-500/20 text-growbroo-500' : 'bg-gray-800 text-gray-400'
+                }`}>
+                  {project.plan_type}
+                </span>
+              )}
+            </div>
+            <p className="text-gray-400 mt-2">Project ID: <span className="text-growbroo-400 font-mono">{project.ticket_number}</span></p>
+            
+            {project.plan_type === 'Plan 1' && project.current_stage < 9 && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="mt-3 border-growbroo-500 text-growbroo-500 hover:bg-growbroo-500 hover:text-white"
+                onClick={upgradePlan}
+              >
+                ⭐ Upgrade to Plan 2 (₹7,500)
+              </Button>
+            )}
           </div>
           
           <div className="text-left md:text-right w-full md:w-auto bg-surface-hover/30 p-4 rounded-xl border border-border">
