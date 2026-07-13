@@ -10,10 +10,20 @@ async function check() {
   console.log("Push Subscriptions:", pushData);
   if (pushError) console.error("Push Subscriptions Error:", pushError);
 
-  console.log("Checking all users...");
-  const { data: users, error: usersError } = await supabase.from('users').select('*');
-  console.log("Users:", users);
-  if (usersError) console.error("Users Error:", usersError);
+  console.log("Inserting Admin into users table...");
+  const adminId = '64e4d108-ac38-4188-8625-32692a4c2cbb';
+  const { data: insertData, error: insertError } = await supabase.from('users').insert({
+    id: adminId,
+    name: 'Admin User',
+    role: 'Administrator',
+    status: 'Approved'
+  }).select();
+  
+  if (insertError) {
+    console.error("Failed to insert:", insertError);
+  } else {
+    console.log("Successfully inserted Admin:", insertData);
+  }
 }
 
 check();
