@@ -9,9 +9,8 @@ interface ScrollingPreviewProps {
 }
 
 export function ScrollingPreview({ name, url, index }: ScrollingPreviewProps) {
-  // Use Thum.io or Microlink for full-page screenshot
-  // Thum.io with a very long crop captures a tall image of the site
-  const screenshotUrl = `https://image.thum.io/get/width/1200/crop/8000/noanimate/${url}`;
+  // Use Microlink for full-page screenshot (handles SPAs and Vercel sites better)
+  const screenshotUrl = `https://api.microlink.io/?url=${url}&screenshot=true&meta=false&embed=screenshot.url`;
 
   return (
     <motion.div
