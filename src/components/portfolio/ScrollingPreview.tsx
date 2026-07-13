@@ -10,8 +10,8 @@ interface ScrollingPreviewProps {
 
 export function ScrollingPreview({ name, url, index }: ScrollingPreviewProps) {
   // Use Microlink for full-page screenshot (handles SPAs and Vercel sites better)
-  // We add &waitFor=10s to ensure any website preloaders or loading animations finish before the screenshot is taken
-  const screenshotUrl = `https://api.microlink.io/?url=${url}&screenshot=true&meta=false&waitFor=10s&embed=screenshot.url`;
+  // We add &waitFor=10s to ensure any website preloaders finish, and &fullPage=true to capture the entire scrolling height
+  const screenshotUrl = `https://api.microlink.io/?url=${url}&screenshot=true&meta=false&waitFor=10s&fullPage=true&embed=screenshot.url`;
 
   return (
     <motion.div
