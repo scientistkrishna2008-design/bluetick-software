@@ -154,6 +154,9 @@ export function GrowthPartnerDashboard() {
             <Button variant="outline" className="text-growbroo-500 border-growbroo-500/50 hover:bg-growbroo-500/10" asChild>
               <a href="tel:7010904686">Get Support</a>
             </Button>
+            <Button variant="outline" className="border-white/20 text-gray-300 hover:bg-white/10 hover:text-white transition-colors" onClick={() => navigate('/sop')}>
+              ⚙️ SOP
+            </Button>
             <Button variant="outline" className="border-growbroo-500 text-growbroo-500 hover:bg-growbroo-500 hover:text-white transition-colors" onClick={() => navigate('/academy')}>
               🎓 Partner Academy
             </Button>

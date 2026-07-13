@@ -10,6 +10,7 @@ import { EngineerDashboard } from "./pages/dashboards/EngineerDashboard";
 import { GrowthPartnerDashboard } from "./pages/dashboards/GrowthPartnerDashboard";
 import { ProjectDetails } from "./pages/projects/ProjectDetails";
 import { Academy } from "./pages/academy/Academy";
+import { SOP } from "./pages/sop/SOP";
 
 function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode, allowedRoles?: string[] }) {
   const { user, loading } = useAuth();
@@ -78,6 +79,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['Administrator', 'Growth Partner']}>
               <Academy />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/sop" 
+          element={
+            <ProtectedRoute allowedRoles={['Administrator', 'Web Engineer', 'Growth Partner']}>
+              <SOP />
             </ProtectedRoute>
           } 
         />
