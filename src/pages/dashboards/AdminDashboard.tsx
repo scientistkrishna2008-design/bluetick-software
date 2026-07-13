@@ -5,6 +5,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { supabase } from "../../lib/supabase";
 import { CreateProjectModal } from "../../components/projects/CreateProjectModal";
+import { GrowthPartnerProjectsModal } from "../../components/admin/GrowthPartnerProjectsModal";
 import { useNavigate } from "react-router";
 
 const mockData = [
@@ -24,6 +25,7 @@ export function AdminDashboard() {
   const [portfolioProjects, setPortfolioProjects] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [showCreateProject, setShowCreateProject] = useState(false);
+  const [selectedPartner, setSelectedPartner] = useState<any>(null);
   
   // Portfolio form state
   const [portfolioName, setPortfolioName] = useState("");
@@ -143,7 +145,7 @@ export function AdminDashboard() {
             { title: "Total Revenue", value: "$45,231.89", change: "+20.1%" },
             { title: "Active Projects", value: projects.length.toString(), change: "Tracking all stages" },
             { title: "Pending Applications", value: pendingUsers.length.toString(), change: "Needs review" },
-            { title: "Growth Partners", value: "24", change: "+12%" },
+            { title: "Growth Partners", value: users.filter(u => u.role === 'Growth Partner').length.toString(), change: "Active Sales" },
           ].map((stat, i) => (
             <Card key={i}>
               <CardHeader className="pb-2">
@@ -378,6 +380,64 @@ export function AdminDashboard() {
           </div>
         </div>
 
+        {/* Growth Partners Management Section */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">Growth Partners</h2>
+            <p className="text-sm text-gray-400">Manage and track your sales partners</p>
+          </div>
+          <Card>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="text-xs text-gray-400 uppercase bg-surface-hover/50 border-b border-border">
+                    <tr>
+                      <th className="px-6 py-4">Name</th>
+                      <th className="px-6 py-4">Contact Info</th>
+                      <th className="px-6 py-4">GPay Number</th>
+                      <th className="px-6 py-4 text-center">Total Projects</th>
+                      <th className="px-6 py-4 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.filter(u => u.role === 'Growth Partner').map(partner => {
+                      const partnerProjects = projects.filter(p => p.growth_partner_id === partner.id);
+                      return (
+                        <tr key={partner.id} className="border-b border-border hover:bg-surface-hover/30">
+                          <td className="px-6 py-4 font-bold">{partner.name}</td>
+                          <td className="px-6 py-4">
+                            <p className="text-gray-300">{partner.email}</p>
+                            <p className="text-xs text-gray-500 font-mono mt-1">{partner.phone || "No Phone"}</p>
+                          </td>
+                          <td className="px-6 py-4 font-mono text-growbroo-400">{partner.gpay_number || "Not set"}</td>
+                          <td className="px-6 py-4 text-center">
+                            <button 
+                              onClick={() => setSelectedPartner(partner)}
+                              className="px-3 py-1 bg-surface border border-border rounded-full hover:border-growbroo-500 hover:text-growbroo-500 transition-colors"
+                            >
+                              {partnerProjects.length} Projects
+                            </button>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <span className={`px-2 py-1 rounded text-xs ${partner.status === 'Approved' ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
+                              {partner.status}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                    {users.filter(u => u.role === 'Growth Partner').length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="px-6 py-8 text-center text-gray-400">No Growth Partners registered yet.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Charts & Pending Users */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-2">
@@ -427,6 +487,12 @@ export function AdminDashboard() {
       {showCreateProject && (
         <CreateProjectModal onClose={() => setShowCreateProject(false)} onSuccess={fetchData} />
       )}
+
+      <GrowthPartnerProjectsModal 
+        isOpen={!!selectedPartner} 
+        onClose={() => setSelectedPartner(null)} 
+        partner={selectedPartner} 
+      />
     </div>
   );
 }

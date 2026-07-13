@@ -12,7 +12,7 @@ const joinSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  phone: z.string().optional(),
+  phone: z.string().min(1, "Phone number is required"),
   role: z.enum(["Web Engineer", "Growth Partner", "Client"]),
   portfolio: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   gpayNumber: z.string().optional(),
@@ -64,6 +64,7 @@ export function Join() {
             id: authData.user.id,
             email: data.email,
             name: data.fullName,
+            phone: data.phone,
             role: data.role,
             gpay_number: data.role !== 'Client' ? data.gpayNumber : null,
             status: "Pending" // Explicitly pending
@@ -141,8 +142,9 @@ export function Join() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">Phone (Optional)</label>
-                  <Input {...register("phone")} placeholder="+1..." />
+                  <label className="text-sm font-medium text-gray-300">Phone Number</label>
+                  <Input {...register("phone")} placeholder="+1..." required />
+                  {errors.phone && <p className="text-xs text-red-500">{errors.phone.message}</p>}
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-300">Role</label>
