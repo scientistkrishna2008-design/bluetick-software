@@ -12,6 +12,7 @@ export function Academy() {
   const [expandedModule, setExpandedModule] = useState<number | null>(null);
   const [activeClient, setActiveClient] = useState<any | null>(null);
   const [simulationsCompleted, setSimulationsCompleted] = useState(0);
+  const [certificateUnlocked, setCertificateUnlocked] = useState(false);
 
   const progressPercentage = Math.round((completedModules.length / MODULES.length) * 100);
   const isCertified = completedModules.length === MODULES.length && simulationsCompleted > 0;
@@ -266,12 +267,19 @@ export function Academy() {
               </div>
 
               <Button 
-                variant="premium" 
+                variant={certificateUnlocked ? "outline" : "premium"}
                 size="lg" 
-                disabled={!isCertified}
-                className={!isCertified ? 'opacity-50 cursor-not-allowed bg-surface hover:bg-surface border-white/10' : ''}
+                disabled={!isCertified || certificateUnlocked}
+                onClick={() => setCertificateUnlocked(true)}
+                className={
+                  !isCertified 
+                    ? 'opacity-50 cursor-not-allowed bg-surface hover:bg-surface border-white/10' 
+                    : certificateUnlocked 
+                      ? 'text-green-500 border-green-500/50 bg-green-500/10 cursor-default' 
+                      : ''
+                }
               >
-                {isCertified ? 'Unlock Certificate' : 'Complete Requirements to Unlock'}
+                {certificateUnlocked ? '✓ Certificate Unlocked & Emailed' : isCertified ? 'Unlock Certificate' : 'Complete Requirements to Unlock'}
               </Button>
             </CardContent>
           </Card>
