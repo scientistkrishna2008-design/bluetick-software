@@ -5,6 +5,7 @@ import { Card } from "../components/ui/Card";
 import { useNavigate } from "react-router";
 import { PricingCards } from "../components/pricing/PricingCards";
 import { PortfolioCard } from "../components/portfolio/PortfolioCard";
+import { FounderSection } from "../components/home/FounderSection";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
@@ -114,6 +115,9 @@ export function Home() {
           </div>
         </div>
       </section>
+
+      {/* Founder Section */}
+      <FounderSection />
 
       {/* Why Us Section */}
       <section className="py-24 px-6">
