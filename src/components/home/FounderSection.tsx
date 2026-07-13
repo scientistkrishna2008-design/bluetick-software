@@ -30,8 +30,8 @@ export function FounderSection() {
               <div className="absolute bottom-0 left-0 w-32 h-32 border-b border-l border-growbroo-500/30 rounded-bl-[1.5rem] opacity-50" />
               
               <img 
-                src="/founder.png" 
-                alt="Sai Krishna - Founder of GrowBroo"
+                src="/ecosystem.jpg" 
+                alt="GrowBro Digital Ecosystem"
                 className="w-full h-auto rounded-[1.2rem] object-cover relative z-10"
               />
               
