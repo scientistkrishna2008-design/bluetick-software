@@ -64,6 +64,18 @@ export function AdminDashboard() {
     if (!error) fetchData();
   };
 
+  const deleteProject = async (id: string) => {
+    if (window.confirm("Are you absolutely sure you want to delete this project? This cannot be undone!")) {
+      const { error } = await supabase.from('projects').delete().eq('id', id);
+      if (error) {
+        alert("Failed to delete project: " + error.message);
+      } else {
+        alert("Project deleted successfully.");
+        fetchData();
+      }
+    }
+  };
+
   const approveUser = async (id: string) => {
     const { error } = await supabase.from('users').update({ status: 'Approved' }).eq('id', id);
     if (!error) {
@@ -210,8 +222,9 @@ export function AdminDashboard() {
                           <span className="px-2 py-1 bg-surface border border-border rounded text-xs">{p.stage_1_status}</span>
                         </td>
                         <td className="px-6 py-4 text-gray-400">{users.find(u => u.id === p.engineer_id)?.name || "Unassigned"}</td>
-                        <td className="px-6 py-4 text-right">
+                        <td className="px-6 py-4 text-right flex justify-end gap-2">
                           <Button variant="ghost" size="sm" onClick={() => navigate(`/project/${p.id}`)}>View Master</Button>
+                          <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600 hover:bg-red-500/10" onClick={() => deleteProject(p.id)}>Delete</Button>
                         </td>
                       </tr>
                     ))}

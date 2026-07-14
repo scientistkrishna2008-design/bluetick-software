@@ -222,6 +222,18 @@ export function ProjectDetails() {
     }
   };
 
+  const deleteProject = async () => {
+    if (window.confirm("Are you absolutely sure you want to delete this project? This action cannot be undone!")) {
+      const { error } = await supabase.from("projects").delete().eq("id", project.id);
+      if (error) {
+        alert("Failed to delete project: " + error.message);
+      } else {
+        alert("Project deleted successfully.");
+        navigate("/home");
+      }
+    }
+  };
+
   if (loading) return <div className="min-h-screen pt-24 text-center">Loading...</div>;
   if (!project) return <div className="min-h-screen pt-24 text-center">Project not found</div>;
 
@@ -255,6 +267,17 @@ export function ProjectDetails() {
                 onClick={upgradePlan}
               >
                 ⭐ Upgrade to Plan 2 (₹7,500)
+              </Button>
+            )}
+
+            {user?.role === 'Administrator' && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="mt-3 ml-3 border-red-500/50 text-red-500 hover:bg-red-500 hover:text-white"
+                onClick={deleteProject}
+              >
+                🗑️ Delete Project
               </Button>
             )}
           </div>
