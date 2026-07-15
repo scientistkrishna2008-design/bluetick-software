@@ -15,6 +15,7 @@ import { CreatorVerification } from "./pages/creator/CreatorVerification";
 import { EngineerAcademy } from "./pages/academy/EngineerAcademy";
 import { ClientLayout } from "./components/layout/ClientLayout";
 import { ClientDashboard } from "./pages/dashboards/ClientDashboard";
+import { ProjectFileManager } from "./pages/projects/ProjectFileManager";
 
 function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode, allowedRoles?: string[] }) {
   const { user, loading } = useAuth();
@@ -139,6 +140,16 @@ function AppRoutes() {
         <Route path="analytics" element={<div className="p-8 text-xl text-gray-400">Analytics (Coming Soon)</div>} />
         <Route path="profile" element={<div className="p-8 text-xl text-gray-400">Profile (Coming Soon)</div>} />
       </Route>
+
+      {/* Project File Manager Route (Standalone Layout) */}
+      <Route 
+        path="/project/:id/files" 
+        element={
+          <ProtectedRoute allowedRoles={['Administrator', 'Web Engineer', 'Growth Partner', 'Client']}>
+            <ProjectFileManager />
+          </ProtectedRoute>
+        } 
+      />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
