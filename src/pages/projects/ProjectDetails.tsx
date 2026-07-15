@@ -257,7 +257,25 @@ export function ProjectDetails() {
                 </span>
               )}
             </div>
-            <p className="text-gray-400 mt-2">Project ID: <span className="text-growbroo-400 font-mono">{project.ticket_number}</span></p>
+            <p className="text-gray-400 mt-2 mb-4">Project ID: <span className="text-growbroo-400 font-mono">{project.ticket_number}</span></p>
+            
+            <div className="flex flex-wrap items-center gap-3 mb-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-growbroo-500/50 text-white hover:bg-growbroo-500/10"
+                onClick={() => navigate(`/project/${project.id}/files`)}
+              >
+                📂 File Manager
+              </Button>
+              <Button 
+                variant="premium" 
+                size="sm" 
+                onClick={() => navigate(`/project/${project.id}/activity`)}
+              >
+                📜 Activity Timeline
+              </Button>
+            </div>
             
             {project.plan_type === 'Plan 1' && project.current_stage < 9 && (
               <Button 

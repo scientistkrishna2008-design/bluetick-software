@@ -16,6 +16,7 @@ import { EngineerAcademy } from "./pages/academy/EngineerAcademy";
 import { ClientLayout } from "./components/layout/ClientLayout";
 import { ClientDashboard } from "./pages/dashboards/ClientDashboard";
 import { ProjectFileManager } from "./pages/projects/ProjectFileManager";
+import { ProjectActivityTimeline } from "./pages/projects/ProjectActivityTimeline";
 
 function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode, allowedRoles?: string[] }) {
   const { user, loading } = useAuth();
@@ -147,6 +148,16 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['Administrator', 'Web Engineer', 'Growth Partner', 'Client']}>
             <ProjectFileManager />
+          </ProtectedRoute>
+        } 
+      />
+
+      {/* Project Activity Timeline Route (Standalone Layout) */}
+      <Route 
+        path="/project/:id/activity" 
+        element={
+          <ProtectedRoute allowedRoles={['Administrator', 'Web Engineer', 'Growth Partner', 'Client']}>
+            <ProjectActivityTimeline />
           </ProtectedRoute>
         } 
       />
