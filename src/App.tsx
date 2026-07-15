@@ -12,6 +12,7 @@ import { ProjectDetails } from "./pages/projects/ProjectDetails";
 import { Academy } from "./pages/academy/Academy";
 import { SOP } from "./pages/sop/SOP";
 import { CreatorVerification } from "./pages/creator/CreatorVerification";
+import { EngineerAcademy } from "./pages/academy/EngineerAcademy";
 
 function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode, allowedRoles?: string[] }) {
   const { user, loading } = useAuth();
@@ -88,6 +89,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['Administrator', 'Growth Partner']}>
               <Academy />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/engineer-academy" 
+          element={
+            <ProtectedRoute allowedRoles={['Administrator', 'Web Engineer']}>
+              <EngineerAcademy />
             </ProtectedRoute>
           } 
         />

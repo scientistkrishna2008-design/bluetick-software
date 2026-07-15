@@ -18,11 +18,19 @@ export function EngineerDashboard() {
   const [gpayInput, setGpayInput] = useState("");
   const [verificationStatus, setVerificationStatus] = useState<any>(null); // null, 'Pending', 'Verified', 'Rejected'
   const [verificationData, setVerificationData] = useState<any>(null);
+  const [isCertified, setIsCertified] = useState(false);
 
   useEffect(() => {
     if (user) {
       fetchVerificationStatus();
       fetchAssignedWork();
+      
+      const key = `academy_progress_${user.uid}`;
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.isCertified) setIsCertified(true);
+      }
     }
   }, [user]);
 
@@ -190,11 +198,26 @@ export function EngineerDashboard() {
           </div>
         )}
 
+        {verificationStatus === 'Verified' && !isCertified && (
+          <div className="mb-8 p-6 rounded-xl border border-blue-500/30 bg-blue-500/5 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+              <h3 className="text-lg font-bold text-white mb-1">Engineer Academy Certification Required</h3>
+              <p className="text-sm text-gray-400">You must pass the GrowBro Web Engineer Academy to unlock live client projects.</p>
+            </div>
+            <Button 
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold whitespace-nowrap"
+              onClick={() => navigate('/engineer-academy')}
+            >
+              Go To Academy
+            </Button>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           
           {/* Action Required */}
           <div>
-            {verificationStatus === 'Verified' ? (
+            {verificationStatus === 'Verified' && isCertified ? (
               pendingAssignments.length > 0 && (
                 <>
                   <h2 className="text-xl font-bold mb-6 text-purple-500 border-b border-border pb-2">
