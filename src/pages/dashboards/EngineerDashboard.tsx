@@ -233,6 +233,7 @@ export function EngineerDashboard() {
                   ))}
                 </div>
               </>
+              )
             ) : null}
 
             <h2 className="text-xl font-bold mb-6 text-growbroo-400 border-b border-border pb-2">
