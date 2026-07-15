@@ -13,6 +13,8 @@ import { Academy } from "./pages/academy/Academy";
 import { SOP } from "./pages/sop/SOP";
 import { CreatorVerification } from "./pages/creator/CreatorVerification";
 import { EngineerAcademy } from "./pages/academy/EngineerAcademy";
+import { ClientLayout } from "./components/layout/ClientLayout";
+import { ClientDashboard } from "./pages/dashboards/ClientDashboard";
 
 function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode, allowedRoles?: string[] }) {
   const { user, loading } = useAuth();
@@ -117,6 +119,27 @@ function AppRoutes() {
           } 
         />{/* Placeholder for other dashboards */}
       </Route>
+      
+      {/* Client Dashboard Routes (Separate Layout) */}
+      <Route 
+        path="/dashboard/client" 
+        element={
+          <ProtectedRoute allowedRoles={['Client', 'Administrator']}>
+            <ClientLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<ClientDashboard />} />
+        <Route path="projects" element={<div className="p-8 text-xl text-gray-400">My Projects (Coming Soon)</div>} />
+        <Route path="messages" element={<div className="p-8 text-xl text-gray-400">Messages (Coming Soon)</div>} />
+        <Route path="files" element={<div className="p-8 text-xl text-gray-400">Files (Coming Soon)</div>} />
+        <Route path="payments" element={<div className="p-8 text-xl text-gray-400">Payments (Coming Soon)</div>} />
+        <Route path="hosting" element={<div className="p-8 text-xl text-gray-400">Domain & Hosting (Coming Soon)</div>} />
+        <Route path="support" element={<div className="p-8 text-xl text-gray-400">Support (Coming Soon)</div>} />
+        <Route path="analytics" element={<div className="p-8 text-xl text-gray-400">Analytics (Coming Soon)</div>} />
+        <Route path="profile" element={<div className="p-8 text-xl text-gray-400">Profile (Coming Soon)</div>} />
+      </Route>
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
