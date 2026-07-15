@@ -67,11 +67,21 @@ export function Join() {
             phone: data.phone,
             role: data.role,
             gpay_number: data.role !== 'Client' ? data.gpayNumber : null,
-            status: "Pending" // Explicitly pending
+            status: data.role === 'Web Engineer' ? "Approved" : "Pending" // Web Engineers go to Creator Verification directly
           }
         ]);
 
         if (dbError) throw dbError;
+      }
+      
+      if (data.role === 'Web Engineer') {
+        // Automatically sign them in so they can hit the redirect
+        await supabase.auth.signInWithPassword({
+          email: data.email,
+          password: data.password,
+        });
+        window.location.href = '/creator-verification';
+        return;
       }
 
       setIsSubmitted(true);

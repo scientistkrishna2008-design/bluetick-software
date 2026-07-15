@@ -11,6 +11,7 @@ import { GrowthPartnerDashboard } from "./pages/dashboards/GrowthPartnerDashboar
 import { ProjectDetails } from "./pages/projects/ProjectDetails";
 import { Academy } from "./pages/academy/Academy";
 import { SOP } from "./pages/sop/SOP";
+import { CreatorVerification } from "./pages/creator/CreatorVerification";
 
 function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode, allowedRoles?: string[] }) {
   const { user, loading } = useAuth();
@@ -55,6 +56,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['Administrator']}>
               <AdminDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/creator-verification" 
+          element={
+            <ProtectedRoute allowedRoles={['Web Engineer']}>
+              <CreatorVerification />
             </ProtectedRoute>
           } 
         />

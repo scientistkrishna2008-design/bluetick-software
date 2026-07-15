@@ -51,7 +51,18 @@ export function Login() {
       if (profile?.role === 'Administrator') {
         navigate('/dashboard/admin');
       } else if (profile?.role === 'Web Engineer') {
-        navigate('/dashboard/engineer');
+        // Check verification status
+        const { data: verification } = await supabase
+          .from('creator_verifications')
+          .select('status')
+          .eq('user_id', user?.id)
+          .single();
+          
+        if (verification?.status === 'Verified') {
+          navigate('/dashboard/engineer');
+        } else {
+          navigate('/creator-verification');
+        }
       } else if (profile?.role === 'Client') {
         navigate('/dashboard/client');
       } else if (profile?.role === 'Growth Partner') {

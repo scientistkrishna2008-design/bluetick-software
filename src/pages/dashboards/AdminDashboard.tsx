@@ -6,6 +6,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { supabase } from "../../lib/supabase";
 import { CreateProjectModal } from "../../components/projects/CreateProjectModal";
 import { GrowthPartnerProjectsModal } from "../../components/admin/GrowthPartnerProjectsModal";
+import { VerificationReviewModal } from "../../components/admin/VerificationReviewModal";
 import { useNavigate } from "react-router";
 import { NotificationBell } from "../../components/notifications/NotificationBell";
 
@@ -25,6 +26,8 @@ export function AdminDashboard() {
   const [projects, setProjects] = useState<any[]>([]);
   const [portfolioProjects, setPortfolioProjects] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
+  const [verifications, setVerifications] = useState<any[]>([]);
+  const [selectedVerification, setSelectedVerification] = useState<any>(null);
   const [showCreateProject, setShowCreateProject] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState<any>(null);
   
@@ -56,6 +59,10 @@ export function AdminDashboard() {
     // Fetch portfolio projects
     const { data: portfolioData } = await supabase.from('portfolio_projects').select('*').order('created_at', { ascending: false });
     if (portfolioData) setPortfolioProjects(portfolioData);
+
+    // Fetch creator verifications
+    const { data: verifData } = await supabase.from('creator_verifications').select('*').order('created_at', { ascending: false });
+    if (verifData) setVerifications(verifData);
   };
 
   const markPaid = async (projectId: string, role: 'engineer' | 'growth_partner') => {
@@ -405,6 +412,59 @@ export function AdminDashboard() {
           </div>
         </div>
 
+        {/* Creator Verification Section */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">Creator Verification</h2>
+            <p className="text-sm text-gray-400">Review and approve Web Engineer portfolios</p>
+          </div>
+          <Card>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="text-xs text-gray-400 uppercase bg-surface-hover/50 border-b border-border">
+                    <tr>
+                      <th className="px-6 py-4">Creator</th>
+                      <th className="px-6 py-4">Experience</th>
+                      <th className="px-6 py-4">Submission Date</th>
+                      <th className="px-6 py-4 text-center">Status</th>
+                      <th className="px-6 py-4 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {verifications.map(verif => {
+                      const creator = users.find(u => u.id === verif.user_id);
+                      return (
+                        <tr key={verif.id} className="border-b border-border hover:bg-surface-hover/30">
+                          <td className="px-6 py-4">
+                            <p className="font-bold">{creator?.name || 'Unknown'}</p>
+                            <p className="text-gray-400 text-xs">{creator?.email}</p>
+                          </td>
+                          <td className="px-6 py-4">{verif.experience_level}</td>
+                          <td className="px-6 py-4">{new Date(verif.created_at).toLocaleDateString()}</td>
+                          <td className="px-6 py-4 text-center">
+                            <span className={`px-2 py-1 rounded text-xs ${verif.status === 'Verified' ? 'bg-green-500/10 text-green-500' : verif.status === 'Rejected' ? 'bg-red-500/10 text-red-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
+                              {verif.status}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <Button size="sm" variant="ghost" onClick={() => setSelectedVerification(verif)}>Review Portfolio</Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                    {verifications.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="px-6 py-8 text-center text-gray-400">No verifications pending.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Growth Partners Management Section */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
@@ -512,6 +572,14 @@ export function AdminDashboard() {
       {showCreateProject && (
         <CreateProjectModal onClose={() => setShowCreateProject(false)} onSuccess={fetchData} />
       )}
+
+      <VerificationReviewModal
+        isOpen={!!selectedVerification}
+        onClose={() => setSelectedVerification(null)}
+        verification={selectedVerification}
+        userMap={users}
+        onUpdate={fetchData}
+      />
 
       <GrowthPartnerProjectsModal 
         isOpen={!!selectedPartner} 

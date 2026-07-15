@@ -112,6 +112,38 @@ create table public.portfolio_projects (
   name text not null,
   url text not null,
   image_url text not null,
-  created_at timestamp with time zone default timezone('utc'::text, now())
 );
 alter table public.portfolio_projects disable row level security;
+
+-- Table: creator_verifications (Web Engineer Onboarding)
+create table public.creator_verifications (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users on delete cascade unique,
+  phone text,
+  city text,
+  experience_level text,
+  github text,
+  behance text,
+  dribbble text,
+  linkedin text,
+  portfolio_website text,
+  status text default 'Pending', -- Pending, Verified, Rejected
+  rejection_reason text,
+  portfolio_score integer,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+alter table public.creator_verifications disable row level security;
+
+-- Table: creator_portfolios (Web Engineer Portfolio Items)
+create table public.creator_portfolios (
+  id uuid default gen_random_uuid() primary key,
+  verification_id uuid references public.creator_verifications(id) on delete cascade,
+  website_name text not null,
+  live_url text not null,
+  description text,
+  role_in_project text,
+  technologies text,
+  screenshot_url text,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+alter table public.creator_portfolios disable row level security;

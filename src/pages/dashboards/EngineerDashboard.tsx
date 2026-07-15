@@ -16,12 +16,26 @@ export function EngineerDashboard() {
   const [pendingAssignments, setPendingAssignments] = useState<any[]>([]);
   const [tickets, setTickets] = useState<any[]>([]);
   const [gpayInput, setGpayInput] = useState("");
+  const [verificationStatus, setVerificationStatus] = useState<any>(null); // null, 'Pending', 'Verified', 'Rejected'
+  const [verificationData, setVerificationData] = useState<any>(null);
 
   useEffect(() => {
     if (user) {
+      fetchVerificationStatus();
       fetchAssignedWork();
     }
   }, [user]);
+
+  const fetchVerificationStatus = async () => {
+    if (!user) return;
+    const { data } = await supabase.from("creator_verifications").select("*").eq("user_id", user.uid).single();
+    if (data) {
+      setVerificationStatus(data.status);
+      setVerificationData(data);
+    } else {
+      setVerificationStatus('None');
+    }
+  };
 
   const fetchAssignedWork = async () => {
     if (!user) return;
@@ -130,10 +144,27 @@ export function EngineerDashboard() {
   return (
     <div className="min-h-screen pt-24 pb-12 px-6">
       <div className="container mx-auto max-w-5xl">
-        <div className="flex justify-between items-center mb-12">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Engineer Dashboard</h1>
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-3xl font-bold tracking-tight">Engineer Dashboard</h1>
+              {verificationStatus === 'Verified' && (
+                <div className="flex items-center gap-1.5 px-3 py-1 bg-green-500/10 border border-green-500/30 rounded-full text-green-500 text-sm font-bold shadow-[0_0_15px_rgba(34,197,94,0.15)]">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                  Verified Creator
+                </div>
+              )}
+            </div>
             <p className="text-gray-400">Welcome back, {user?.name}</p>
+            {verificationStatus === 'Verified' && verificationData && (
+              <div className="flex gap-4 mt-3 text-xs text-gray-500 font-mono">
+                <p>ID: {verificationData.id.split('-')[0].toUpperCase()}</p>
+                <p>Verified: {new Date(verificationData.created_at).toLocaleDateString()}</p>
+                {verificationData.portfolio_score && (
+                  <p className="text-green-500">Score: {verificationData.portfolio_score}/10</p>
+                )}
+              </div>
+            )}
           </div>
           <div className="flex gap-4">
             <Button variant="outline" className="text-growbroo-500 border-growbroo-500/50 hover:bg-growbroo-500/10" asChild>
@@ -144,17 +175,33 @@ export function EngineerDashboard() {
           </div>
         </div>
 
+        {verificationStatus !== 'Verified' && verificationStatus !== null && (
+          <div className="mb-8 p-6 rounded-xl border border-yellow-500/30 bg-yellow-500/5 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+              <h3 className="text-lg font-bold text-white mb-1">Creator Verification Required</h3>
+              <p className="text-sm text-gray-400">Your account is not verified yet. Complete Creator Verification to start receiving GrowBro projects.</p>
+            </div>
+            <Button 
+              className="bg-green-500 hover:bg-green-600 text-black font-bold whitespace-nowrap"
+              onClick={() => navigate('/creator-verification')}
+            >
+              Complete Verification
+            </Button>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           
           {/* Action Required */}
           <div>
-            {pendingAssignments.length > 0 && (
-              <>
-                <h2 className="text-xl font-bold mb-6 text-purple-500 border-b border-border pb-2">
-                  New Assignments
-                </h2>
-                <div className="space-y-4 mb-8">
-                  {pendingAssignments.map(project => (
+            {verificationStatus === 'Verified' ? (
+              pendingAssignments.length > 0 && (
+                <>
+                  <h2 className="text-xl font-bold mb-6 text-purple-500 border-b border-border pb-2">
+                    New Assignments
+                  </h2>
+                  <div className="space-y-4 mb-8">
+                    {pendingAssignments.map(project => (
                     <Card key={project.id} className="border-purple-500/50">
                       <CardHeader className="bg-purple-500/5 pb-3">
                         <CardTitle className="flex justify-between items-center text-lg">
@@ -186,7 +233,7 @@ export function EngineerDashboard() {
                   ))}
                 </div>
               </>
-            )}
+            ) : null}
 
             <h2 className="text-xl font-bold mb-6 text-growbroo-400 border-b border-border pb-2">
               Action Required (Stage 2)
