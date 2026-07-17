@@ -217,47 +217,47 @@ export function EngineerDashboard() {
           
           {/* Action Required */}
           <div>
-            {verificationStatus === 'Verified' && isCertified ? (
-              pendingAssignments.length > 0 && (
-                <>
-                  <h2 className="text-xl font-bold mb-6 text-purple-500 border-b border-border pb-2">
-                    New Assignments
-                  </h2>
-                  <div className="space-y-4 mb-8">
-                    {pendingAssignments.map(project => (
-                    <Card key={project.id} className="border-purple-500/50">
-                      <CardHeader className="bg-purple-500/5 pb-3">
-                        <CardTitle className="flex justify-between items-center text-lg">
-                          {project.ticket_number}
-                          <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-500/20 text-purple-500">
-                            Pending Acceptance
-                          </span>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="pt-4">
-                        <p className="text-sm font-medium mb-1">{project.business_name}</p>
-                        <p className="text-xs text-gray-400 mb-4 line-clamp-2">{project.requirements}</p>
-                        <div className="flex gap-3">
-                          <Button 
-                            className="flex-1 bg-green-500/10 text-green-500 border border-green-500/30 hover:bg-green-500 hover:text-white"
-                            onClick={() => handleAcceptProject(project.id)}
-                          >
-                            Accept
-                          </Button>
-                          <Button 
-                            className="flex-1 bg-red-500/10 text-red-500 border border-red-500/30 hover:bg-red-500 hover:text-white"
-                            onClick={() => handleDenyProject(project)}
-                          >
-                            Deny
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
+            {pendingAssignments.length > 0 && (
+              <>
+                <h2 className="text-xl font-bold mb-6 text-purple-500 border-b border-border pb-2">
+                  New Assignments
+                </h2>
+                <div className="space-y-4 mb-8">
+                  {pendingAssignments.map(project => (
+                  <Card key={project.id} className="border-purple-500/50">
+                    <CardHeader className="bg-purple-500/5 pb-3">
+                      <CardTitle className="flex justify-between items-center text-lg">
+                        {project.ticket_number}
+                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-500/20 text-purple-500">
+                          Pending Acceptance
+                        </span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-4">
+                      <p className="text-sm font-medium mb-1">{project.business_name}</p>
+                      <p className="text-xs text-gray-400 mb-4 line-clamp-2">{project.requirements}</p>
+                      <div className="flex gap-3">
+                        <Button 
+                          className="flex-1 bg-green-500/10 text-green-500 border border-green-500/30 hover:bg-green-500 hover:text-white"
+                          onClick={() => handleAcceptProject(project.id)}
+                        >
+                          Accept
+                        </Button>
+                        <Button 
+                          className="flex-1 bg-red-500/10 text-red-500 border border-red-500/30 hover:bg-red-500 hover:text-white"
+                          onClick={() => handleDenyProject(project)}
+                        >
+                          Deny
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
                   ))}
                 </div>
               </>
-              )
-            ) : null}
+            )}
+
+
 
             <h2 className="text-xl font-bold mb-6 text-growbroo-400 border-b border-border pb-2">
               Action Required (Stage 2)
